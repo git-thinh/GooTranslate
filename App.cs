@@ -17,6 +17,13 @@ namespace browser
         public oApp appInfo { get { return _app; } }
         static App() {
             _app = new oApp();
+            try
+            {
+                if (File.Exists("app.json")) {
+                    _app = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
+                }
+            }
+            catch { }
         }
 
         [STAThread]
@@ -358,9 +365,10 @@ namespace browser
             {
                 this.Width = this._app.appInfo.Width;
                 this.Height = this._app.appInfo.Height;// Screen.PrimaryScreen.WorkingArea.Height - 27;
-                //this.Top = 27;
-                this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
-                this.Left = 0;// Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+                if(_app.appInfo.Top == 0) _app.appInfo.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+                this.Top = _app.appInfo.Top;
+                this.Left = _app.appInfo.Left;// Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+                this.TopMost = _app.appInfo.alwayOnTop;
 
                 //ui_close.Location = new Point(this.Width - _SIZE_BOX, 0);
                 //ui_close.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -446,8 +454,9 @@ namespace browser
                         this.TopMost = false;
                         this.WindowState = FormWindowState.Minimized;
                     }
-                    else
-                        this.TopMost = true;
+                    else this.TopMost = true;
+
+                    _app.appInfo.alwayOnTop = this.TopMost;
                     break;
                 case "Minimize In TaskBar":
                     this.ContextMenuStrip.Hide();

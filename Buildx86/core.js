@@ -1,6 +1,8 @@
 
 console.log('core.js .....');
 
+if (document && document.body) document.body.style.display = 'none';
+
 function onDomReady() {
     console.info('DOM loaded');
     //-----------------------------------------------------------------
@@ -17,6 +19,9 @@ function onDomReady() {
     var header = document.getElementById('gb');
     if (header) header.remove();
     //-----------------------------------------------------------------
+    setTimeout(function () {
+        if (document && document.body) document.body.style.display = 'block';
+    }, 100);
 }
 
 if (document.readyState === "loading") {  // Loading hasn't finished yet

@@ -123,7 +123,7 @@ namespace browser
         {
             string requestURL = requestResponse.Request.Url;
             string host = requestURL.Split('/')[2];
-            if (_app.appInfo.DisableHosts.Length > 0 && _app.appInfo.DisableHosts.Contains(host)) return true;
+            if (_app.appInfo.disableHosts.Length > 0 && _app.appInfo.disableHosts.Contains(host)) return false;
             if (_app.appInfo.hasWriteLog) _app.writeLog(requestURL);
             return false;
         }

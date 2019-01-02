@@ -1,6 +1,7 @@
 
 /*background: #c1c1c1;
     border-radius: 4px;*/
+
 ::-webkit-scrollbar {
     width: 9px;
 }
@@ -17,6 +18,8 @@
     background: transparent;
 }
 
-body {
-    background-color: red !important;
+.gp-footer,
+.feedback-link,
+.tlid-language-bar.ls-wrap {
+    display: none !important;
 }

@@ -19,6 +19,7 @@ namespace browser
 
     public class oApp
     {
+        public bool alwayOnTop { set; get; }
         public bool hasWriteLog { set; get; }
         public string Url { set; get; }
 
@@ -28,11 +29,12 @@ namespace browser
         public int Left { set; get; }
 
         public oRegisterSchemeCore registerSchemeCore { set; get; }
-        public string[] DisableHosts { set; get; }
+        public string[] disableHosts { set; get; }
 
         public oApp()
         {
-            this.DisableHosts = new string[] { "devtools", "play.google.com" };
+            this.alwayOnTop = false;
+            this.disableHosts = new string[] { "devtools", "play.google.com" };
             this.registerSchemeCore = new oRegisterSchemeCore() { Scheme = "https", Host = "www.google-analytics.com", FileName= "analytics.js" };
             this.hasWriteLog = true;
 
