@@ -5,22 +5,42 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CefSharp.WinForms;
+using System.Text;
+using System.IO;
 
 namespace browser
 {
-    class App
+    class App : IApp
     {
+        private static oApp _app = null;
+        public oApp appInfo { get { return _app; } }
+        static App() {
+            _app = new oApp();
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
             if (!CEF.Initialize(new Settings())) return;
-            Application.Run(new fMain());
+            var app = new App();
+            Application.Run(new fMain(app));
             CEF.Shutdown();
+
+            string log = _log.ToString();
+            if (_app.hasWriteLog) File.WriteAllText("log.txt", log);
+        }
+
+        private static StringBuilder _log  = new StringBuilder(string.Empty);
+        public void writeLog(string text)
+        {
+            _log.Append(text);
+            _log.Append(Environment.NewLine);
         }
     }
 
     class fMain : Form
     {
+        readonly IApp _app;
         const int _SIZE_BOX = 12;
 
         readonly WebView ui_browser;
@@ -210,11 +230,14 @@ namespace browser
 
         /*////////////////////////////////////////////////////////////////////////*/
 
-        public fMain()
+        public fMain(IApp app)
         {
+            this._app = app;
             this.Icon = browser.Properties.Resources.icon;
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
+            
+            #region [ INIT CONTROL ]
 
             var ui_move = new ControlTransparent()
             {
@@ -280,9 +303,17 @@ namespace browser
                 WebSecurityDisabled = true,
                 ApplicationCacheDisabled = true
             });
-            ui_browser.PropertyChanged += (sei, evi) => { if (evi.PropertyName == "IsBrowserInitialized") ui_browser.Load("http://localhost:56789/"); };
+            ui_browser.PropertyChanged += (sei, evi) => {
+                if (evi.PropertyName == "IsBrowserInitialized")
+                    ui_browser.Load(this._app.appInfo.Url);
+            };
             this.Controls.Add(ui_browser);
             ui_browser.MenuHandler = new MenuHandler();
+            //ui_browser.LifeSpanHandler
+            //ui_browser.LoadHandler
+            //ui_browser.JsDialogHandler = new WebViewDialogHandler(this);
+            ui_browser.RequestHandler = new ManifestResourceHandler(_app);
+            ui_browser.LifeSpanHandler = new ExternalLifeSpanHandler();
 
             ContextMenuStrip myMenu = new ContextMenuStrip();
             this.ContextMenuStrip = myMenu;
@@ -307,10 +338,12 @@ namespace browser
             myMenu.Items.Add("Exit Program");
             myMenu.ItemClicked += (se, ev) => f_menuItem_Click(ev.ClickedItem.Text);
 
+            #endregion
+
             this.Shown += (se, ev) =>
             {
-                this.Width = 800;
-                this.Height = 480;// Screen.PrimaryScreen.WorkingArea.Height - 27;
+                this.Width = this._app.appInfo.Width;
+                this.Height = this._app.appInfo.Height;// Screen.PrimaryScreen.WorkingArea.Height - 27;
                 //this.Top = 27;
                 this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
                 this.Left = 0;// Screen.PrimaryScreen.WorkingArea.Width - this.Width;
