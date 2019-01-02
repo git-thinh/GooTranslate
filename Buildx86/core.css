@@ -19,7 +19,10 @@
 }
 
 body {
-    border: 3px solid red !important;
+    border-top: 1px solid orangered !important;
+    border-left: 1px solid orangered !important; 
+    height: 100vh;
+    background-color: #fff !important;
 }
 
 .gp-footer,
@@ -27,4 +30,9 @@ body {
 .tlid-language-bar.ls-wrap,
 .result-footer.source-or-target-footer.tlid-copy-target {
     display: none !important;
+}
+
+.main-header {
+    box-shadow: none !important;
+    border-bottom: 1px solid gray !important;
 }
