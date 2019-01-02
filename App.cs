@@ -8,7 +8,7 @@ using CefSharp.WinForms;
 
 namespace browser
 {
-    class Program
+    class App
     {
         [STAThread]
         static void Main(string[] args)
