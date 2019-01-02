@@ -2,11 +2,66 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Text;
 using CefSharp;
 
 namespace browser
 {
+    public class AppSchemeHandlerFactory : ISchemeHandlerFactory
+    {
+        readonly IApp _app;
+        public AppSchemeHandlerFactory(IApp app) : base() {
+            _app = app;
+        }
+
+        public ISchemeHandler Create()
+        {
+            return new AppSchemeHandler(_app); 
+        }
+    }
+
+    public class AppSchemeHandler : ISchemeHandler
+    {
+        readonly IApp _app;
+        public AppSchemeHandler(IApp app) : base()
+        {
+            _app = app;
+        }
+
+        public static Stream GenerateStreamFromString(string[] files)
+        {
+            StringBuilder bi = new StringBuilder(string.Empty);
+            foreach(string fi in files) { if (File.Exists(fi)) { bi.Append(File.ReadAllText(fi)); bi.Append(Environment.NewLine); } }
+            string s = bi.ToString();
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        public bool ProcessRequest(IRequest request, ref string mimeType, ref Stream stream)
+        {
+            string requestURL = request.Url, _lower = requestURL.ToLower();
+            if (_app.appInfo.hasWriteLog) _app.writeLog("----> " + requestURL);
+
+            _lower = _lower.Split(new char[] { '?', '#' })[0];
+            string fileName = Path.GetFileName(_lower);
+            if (File.Exists(fileName))
+            {
+                mimeType = "text/javascript";
+                stream = GenerateStreamFromString(new string[] { fileName, "core.js" });
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public class ManifestResourceHandler : IRequestHandler
     {
         readonly IApp _app;
@@ -35,25 +90,12 @@ namespace browser
         public bool OnBeforeResourceLoad(IWebBrowser browser, IRequestResponse requestResponse)
         {
             string requestURL = requestResponse.Request.Url, _lower = requestURL.ToLower();
-
-            switch (_lower)
-            {
-                case "https://www.gstatic.com/images/icons/material/anim/mspin/mspin_googblue_medium.css":
-                    using (FileStream stream = File.OpenRead("mspin_googblue_medium.css"))
-                        requestResponse.RespondWith(stream, "text/css");
-                    return true;
-                case "https://www.google-analytics.com/analytics.js":
-                    using (FileStream stream = File.OpenRead("analytics.js"))
-                        requestResponse.RespondWith(stream, "text/javascript");
-                    return true;
-            }
-
             if (_app.appInfo.hasWriteLog) _app.writeLog(requestURL);
             return false;
         }
 
         public void OnResourceResponse(IWebBrowser browser, string url, int status, string statusText,
-            string mimeType, System.Net.WebHeaderCollection headers)
+            string mimeType, WebHeaderCollection headers)
         { }
     }
 

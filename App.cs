@@ -23,6 +23,10 @@ namespace browser
         {
             if (!CEF.Initialize(new Settings())) return;
             var app = new App();
+
+            foreach (var rs in app.appInfo.registerSchemes) 
+                CEF.RegisterScheme(rs.Scheme, rs.Host, true, new AppSchemeHandlerFactory(app));
+
             Application.Run(new fMain(app));
             CEF.Shutdown();
 
@@ -236,7 +240,23 @@ namespace browser
             this.Icon = browser.Properties.Resources.icon;
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
-            
+
+            ui_browser = new WebView("about:blank", new BrowserSettings()
+            {
+                PageCacheDisabled = true,
+                WebSecurityDisabled = true,
+                ApplicationCacheDisabled = true
+            });
+            ui_browser.PropertyChanged += (sei, evi) => {
+                if (evi.PropertyName == "IsBrowserInitialized")
+                    ui_browser.Load(this._app.appInfo.Url);
+            };
+            ////////ui_browser.LifeSpanHandler
+            ////////ui_browser.LoadHandler
+            ////////ui_browser.JsDialogHandler = new WebViewDialogHandler(this);
+            ui_browser.RequestHandler = new ManifestResourceHandler(_app);
+            //////ui_browser.LifeSpanHandler = new ExternalLifeSpanHandler();
+            ///
             #region [ INIT CONTROL ]
 
             var ui_move = new ControlTransparent()
@@ -297,23 +317,8 @@ namespace browser
             ui_close.MouseDoubleClick += (se, ev) => this.Close();
             ui_close.MouseMove += f_form_move_MouseDown;
 
-            ui_browser = new WebView("about:blank", new BrowserSettings()
-            {
-                PageCacheDisabled = true,
-                WebSecurityDisabled = true,
-                ApplicationCacheDisabled = true
-            });
-            ui_browser.PropertyChanged += (sei, evi) => {
-                if (evi.PropertyName == "IsBrowserInitialized")
-                    ui_browser.Load(this._app.appInfo.Url);
-            };
             this.Controls.Add(ui_browser);
             ui_browser.MenuHandler = new MenuHandler();
-            //ui_browser.LifeSpanHandler
-            //ui_browser.LoadHandler
-            //ui_browser.JsDialogHandler = new WebViewDialogHandler(this);
-            ui_browser.RequestHandler = new ManifestResourceHandler(_app);
-            ui_browser.LifeSpanHandler = new ExternalLifeSpanHandler();
 
             ContextMenuStrip myMenu = new ContextMenuStrip();
             this.ContextMenuStrip = myMenu;
