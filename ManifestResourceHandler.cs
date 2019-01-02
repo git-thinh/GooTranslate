@@ -61,6 +61,8 @@ namespace browser
         public bool ProcessRequest(IRequest request, ref string mimeType, ref Stream stream)
         {
             string requestURL = request.Url, _lower = requestURL.ToLower();
+
+
             if (_app.appInfo.hasWriteLog) _app.writeLog("----> " + requestURL);
 
             _lower = _lower.Split(new char[] { '?', '#' })[0];
@@ -119,7 +121,9 @@ namespace browser
 
         public bool OnBeforeResourceLoad(IWebBrowser browser, IRequestResponse requestResponse)
         {
-            string requestURL = requestResponse.Request.Url, _lower = requestURL.ToLower();
+            string requestURL = requestResponse.Request.Url;
+            string host = requestURL.Split('/')[2];
+            if (_app.appInfo.DisableHosts.Length > 0 && _app.appInfo.DisableHosts.Contains(host)) return true;
             if (_app.appInfo.hasWriteLog) _app.writeLog(requestURL);
             return false;
         }

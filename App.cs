@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using CefSharp.WinForms;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace browser
 {
@@ -32,6 +33,9 @@ namespace browser
 
             string log = _log.ToString();
             if (_app.hasWriteLog) File.WriteAllText("log.txt", log);
+
+            string jsonApp = JsonConvert.SerializeObject(app.appInfo, Formatting.Indented);
+            File.WriteAllText("app.json", jsonApp);
         }
 
         private static StringBuilder _log  = new StringBuilder(string.Empty);
@@ -79,6 +83,11 @@ namespace browser
                 int max_y = this.Location.Y + this.Height;
                 this.Width = x - this.Location.X;
                 this.Height = y - this.Location.Y;
+
+                _app.appInfo.Width = this.Width;
+                _app.appInfo.Height = this.Height;
+                _app.appInfo.Top = this.Top;
+                _app.appInfo.Left = this.Left;
             }
         }
 
@@ -366,6 +375,17 @@ namespace browser
 
                 ui_browser.Dock = DockStyle.Fill;
                 ui_browser.SendToBack();
+
+                //_app.appInfo.Width = this.Width;
+                //_app.appInfo.Height = this.Height;
+                //_app.appInfo.Top = this.Top;
+                //_app.appInfo.Left = this.Left;
+            };
+            this.FormClosing += (se, ev) => {
+                _app.appInfo.Width = this.Width;
+                _app.appInfo.Height = this.Height;
+                _app.appInfo.Top = this.Top;
+                _app.appInfo.Left = this.Left;
             };
         }
 
