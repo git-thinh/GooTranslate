@@ -20,6 +20,7 @@
 
 .gp-footer,
 .feedback-link,
-.tlid-language-bar.ls-wrap {
+.tlid-language-bar.ls-wrap,
+.result-footer.source-or-target-footer.tlid-copy-target {
     display: none !important;
 }
