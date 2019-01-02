@@ -1,0 +1,22 @@
+
+/*background: #c1c1c1;
+    border-radius: 4px;*/
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
+
+::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+}
+
+::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+}
+
+body {
+    background-color: red !important;
+}

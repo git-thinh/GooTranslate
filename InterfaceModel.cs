@@ -10,10 +10,11 @@ namespace browser
         void writeLog(string text);
     }
 
-    public class oRegisterSchemes
+    public class oRegisterSchemeCore
     {
         public string Scheme { set; get; }
         public string Host { set; get; }
+        public string FileName { set; get; }
     }
 
     public class oApp
@@ -26,13 +27,11 @@ namespace browser
         public int Top { set; get; }
         public int Left { set; get; }
 
-        public oRegisterSchemes[] registerSchemes { set; get; }
+        public oRegisterSchemeCore registerSchemeCore { set; get; }
 
         public oApp()
         {
-            this.registerSchemes = new oRegisterSchemes[] {
-                new oRegisterSchemes() { Scheme = "https", Host = "www.google-analytics.com" },
-            };
+            this.registerSchemeCore = new oRegisterSchemeCore() { Scheme = "https", Host = "www.google-analytics.com", FileName= "analytics.js" };
             this.hasWriteLog = true;
 
             //this.Url = "https://translate.google.com/#vi/en/";

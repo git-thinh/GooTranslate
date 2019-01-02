@@ -24,8 +24,8 @@ namespace browser
             if (!CEF.Initialize(new Settings())) return;
             var app = new App();
 
-            foreach (var rs in app.appInfo.registerSchemes) 
-                CEF.RegisterScheme(rs.Scheme, rs.Host, true, new AppSchemeHandlerFactory(app));
+            //foreach (var rs in app.appInfo.registerSchemes)  CEF.RegisterScheme(rs.Scheme, rs.Host, true, new AppSchemeHandlerFactory(app));
+            if(app.appInfo.registerSchemeCore != null) CEF.RegisterScheme(app.appInfo.registerSchemeCore.Scheme, app.appInfo.registerSchemeCore.Host, true, new AppSchemeHandlerFactory(app));
 
             Application.Run(new fMain(app));
             CEF.Shutdown();

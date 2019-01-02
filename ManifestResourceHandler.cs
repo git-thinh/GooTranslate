@@ -12,13 +12,14 @@ namespace browser
     public class AppSchemeHandlerFactory : ISchemeHandlerFactory
     {
         readonly IApp _app;
-        public AppSchemeHandlerFactory(IApp app) : base() {
+        public AppSchemeHandlerFactory(IApp app) : base()
+        {
             _app = app;
         }
 
         public ISchemeHandler Create()
         {
-            return new AppSchemeHandler(_app); 
+            return new AppSchemeHandler(_app);
         }
     }
 
@@ -30,10 +31,23 @@ namespace browser
             _app = app;
         }
 
-        public static Stream GenerateStreamFromString(string[] files)
+        Stream GenerateStreamFromString(string[] files)
         {
+            string css = "";
+            if (_app.appInfo.registerSchemeCore != null) css = _app.appInfo.registerSchemeCore.Scheme + "://" + _app.appInfo.registerSchemeCore.Host + "/core.css";
+
             StringBuilder bi = new StringBuilder(string.Empty);
-            foreach(string fi in files) { if (File.Exists(fi)) { bi.Append(File.ReadAllText(fi)); bi.Append(Environment.NewLine); } }
+            foreach (string fi in files)
+            {
+                if (File.Exists(fi))
+                {
+                    string temp = File.ReadAllText(fi);
+                    if (css.Length > 0) temp = temp.Replace("[URL_CORE_CSS]", css);
+
+                    bi.Append(temp);
+                    bi.Append(Environment.NewLine);
+                }
+            }
             string s = bi.ToString();
 
             var stream = new MemoryStream();
@@ -51,11 +65,26 @@ namespace browser
 
             _lower = _lower.Split(new char[] { '?', '#' })[0];
             string fileName = Path.GetFileName(_lower);
-            if (File.Exists(fileName))
+
+            if (_app.appInfo.registerSchemeCore != null
+                && fileName == _app.appInfo.registerSchemeCore.FileName
+                && File.Exists(fileName))
             {
                 mimeType = "text/javascript";
                 stream = GenerateStreamFromString(new string[] { fileName, "core.js" });
                 return true;
+            }
+
+            switch (fileName)
+            {
+                case "core.css":
+                    if (File.Exists(fileName))
+                    {
+                        mimeType = "text/css";
+                        stream = GenerateStreamFromString(new string[] { fileName });
+                        return true;
+                    }
+                    break;
             }
 
             return false;
@@ -65,7 +94,8 @@ namespace browser
     public class ManifestResourceHandler : IRequestHandler
     {
         readonly IApp _app;
-        public ManifestResourceHandler(IApp app) : base() {
+        public ManifestResourceHandler(IApp app) : base()
+        {
             _app = app;
         }
 
