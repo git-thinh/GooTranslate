@@ -3,3 +3,4 @@ Buildx86/browser.pdb
 Buildx86/browser.exe
 /.vs
 /obj
+/Buildx86
