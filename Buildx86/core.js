@@ -1,7 +1,7 @@
+if (document && document.body) document.body.style.display = 'none';
 
 console.log('core.js .....');
 
-if (document && document.body) document.body.style.display = 'none';
 
 function __getMeanText() {
     var el = document.querySelector('.text-wrap.tlid-copy-target');

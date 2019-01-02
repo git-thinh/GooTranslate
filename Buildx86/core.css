@@ -18,6 +18,10 @@
     background: transparent;
 }
 
+body {
+    border: 3px solid red !important;
+}
+
 .gp-footer,
 .feedback-link,
 .tlid-language-bar.ls-wrap,
