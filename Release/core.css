@@ -1,0 +1,38 @@
+
+/*background: #c1c1c1;
+    border-radius: 4px;*/
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
+
+::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+}
+
+::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+}
+
+body {
+    border-top: 1px solid orangered !important;
+    border-left: 1px solid orangered !important; 
+    height: 100vh;
+    background-color: #fff !important;
+}
+
+.gp-footer,
+.feedback-link,
+.tlid-language-bar.ls-wrap,
+.result-footer.source-or-target-footer.tlid-copy-target {
+    display: none !important;
+}
+
+.main-header {
+    box-shadow: none !important;
+    border-bottom: 1px solid gray !important;
+}

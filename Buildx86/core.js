@@ -17,7 +17,7 @@ function ___getMeanText() {
 function ___inputKeydown(e) {
     var key = e.keyCode || e.charCode;
     if (key == 8 || key == 46) {
-        ___inputProcess('DELETE_CHAR')
+        ___inputProcess('DELETE_CHAR');
         return;
     }
 }
@@ -25,10 +25,10 @@ function ___inputKeydown(e) {
 function ___inputKeypress(e) {
     var code = (e.keyCode ? e.keyCode : e.which);
     if (code == 13) {
-        ___inputProcess('ENTER')
+        ___inputProcess('ENTER');
         return;
     }
-    ___inputProcess('DATA')
+    ___inputProcess('DATA');
 }
 
 function ___inputProcess(key) {

@@ -1,0 +1,18 @@
+{
+  "alwayOnTop": true,
+  "hasWriteLog": true,
+  "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",
+  "Width": 567,
+  "Height": 476,
+  "Top": 516,
+  "Left": 27,
+  "registerSchemeCore": {
+    "Scheme": "https",
+    "Host": "www.google-analytics.com",
+    "FileName": "analytics.js"
+  },
+  "disableHosts": [
+    "devtools",
+    "play.google.com"
+  ]
+}

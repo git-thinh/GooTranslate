@@ -4,8 +4,8 @@
   "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",
   "Width": 567,
   "Height": 476,
-  "Top": 603,
-  "Left": 1292,
+  "Top": 352,
+  "Left": 923,
   "registerSchemeCore": {
     "Scheme": "https",
     "Host": "www.google-analytics.com",

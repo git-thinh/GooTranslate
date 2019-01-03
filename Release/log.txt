@@ -1,0 +1,21 @@
+https://translate.google.com/#view=home&op=translate&sl=en&tl=vi
+https://fonts.googleapis.com/css?lang=en&family=Product+Sans|Roboto:400,700
+https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Google+Sans:400,500
+https://translate.google.com/translate/releases/twsfe_w_20181217_RC00/r/css/webapp_ltr.css
+https://www.gstatic.com/images/icons/material/anim/mspin/mspin_googblue_medium.css
+https://translate.google.com/translate/releases/twsfe_w_20181217_RC00/r/js/translate_m.js
+https://www.google-analytics.com/analytics.js
+----> https://www.google-analytics.com/analytics.js
+https://www.gstatic.com/inputtools/js/ita/inputtools_3.js
+https://www.gstatic.com/og/_/js/k=og.qtm.en_US.pKUjEu8LGiw.O/rt=j/m=q_d,qawd,qmd,qsd,qmutsd,qbg/exm=qaaw,qabr,qadd,qaid,qalo,qano,qebr,qein,qhaw,qhbr,qhch,qhga,qhid,qhin,qhlo,qhmn,qhno,qhpc,qhpr,qhsf,qhtb,qhtt/d=1/ed=1/rs=AA2YrTuK_TcXCcMfGiHE5PCb3lGiY1QLaw
+https://www.gstatic.com/og/_/ss/k=og.qtm.-1mw6oloyfmbo0.L.W.O/m=q_d,qawd,qmd/excm=qaaw,qabr,qadd,qaid,qalo,qano,qebr,qein,qhaw,qhbr,qhch,qhga,qhid,qhin,qhlo,qhmn,qhno,qhpc,qhpr,qhsf,qhtb,qhtt/d=1/ed=1/rs=AA2YrTuOxut7JH8Ly6oeHeQvoYjruQpcMQ
+https://www.google-analytics.com/core.css
+----> https://www.google-analytics.com/core.css
+https://translate.google.com/gen204?ttsaudio=mp3=0,ogg=0,wav=0,vol=-1,type=none
+https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff
+https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc-.woff
+https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc-.woff
+https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmWUlfBBc-.woff
+https://apis.google.com/_/scs/abc-static/_/js/k=gapi.gapi.en.FG3dTgKD_wc.O/m=gapi_iframes,googleapis_client,plusone/rt=j/sv=1/d=1/ed=1/rs=AHpOoo_ZNd1Q_9wfB-oUWsMjMFF_7HQbqA/cb=gapi.loaded_0
+https://apis.google.com/_/scs/abc-static/_/js/k=gapi.gapi.en.FG3dTgKD_wc.O/m=client/exm=gapi_iframes,googleapis_client,plusone/rt=j/sv=1/d=1/ed=1/rs=AHpOoo_ZNd1Q_9wfB-oUWsMjMFF_7HQbqA/cb=gapi.loaded_1
+https://ssl.gstatic.com/translate/1x_mobile.png
