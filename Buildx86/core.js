@@ -68,7 +68,7 @@ function ___onDomReady() {
     //    }
     //}, false);
     //-----------------------------------------------------------------
-    var elSource = document.getElementById('source')
+    var elSource = document.getElementById('source');
     if (elSource) {
         elSource.setAttribute('onkeypress', '___inputKeypress(event, this.value.trim())');
         elSource.setAttribute('onkeydown', '___inputKeydown(event)');
