@@ -20,7 +20,7 @@ namespace browser
             try
             {
                 if (File.Exists("app.json")) {
-                    _app = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
+                    //_app = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
                 }
             }
             catch { }
@@ -33,7 +33,7 @@ namespace browser
             var app = new App();
 
             //foreach (var rs in app.appInfo.registerSchemes)  CEF.RegisterScheme(rs.Scheme, rs.Host, true, new AppSchemeHandlerFactory(app));
-            if(app.appInfo.registerSchemeCore != null) CEF.RegisterScheme(app.appInfo.registerSchemeCore.Scheme, app.appInfo.registerSchemeCore.Host, true, new AppSchemeHandlerFactory(app));
+            if(app.appInfo.coreJs != null) CEF.RegisterScheme(app.appInfo.coreJs.Scheme, app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(app));
 
             Application.Run(new fMain(app));
             CEF.Shutdown();
@@ -58,7 +58,7 @@ namespace browser
         readonly IApp _app;
         const int _SIZE_BOX = 12;
 
-        readonly WebView ui_browser;
+        readonly WebViewMain ui_webMain;
         const bool m_hook_MouseMove = true;
         bool m_resizing = false;
 
@@ -257,22 +257,10 @@ namespace browser
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            ui_browser = new WebView("about:blank", new BrowserSettings()
-            {
-                PageCacheDisabled = true,
-                WebSecurityDisabled = true,
-                ApplicationCacheDisabled = true
-            });
-            ui_browser.PropertyChanged += (sei, evi) => {
-                if (evi.PropertyName == "IsBrowserInitialized")
-                    ui_browser.Load(this._app.appInfo.Url);
-            };
-            ////////ui_browser.LifeSpanHandler
-            ////////ui_browser.LoadHandler
-            ////////ui_browser.JsDialogHandler = new WebViewDialogHandler(this);
-            ui_browser.RequestHandler = new ManifestResourceHandler(_app);
-            //////ui_browser.LifeSpanHandler = new ExternalLifeSpanHandler();
-            ///
+            ui_webMain = new WebViewMain(app);
+            this.Controls.Add(ui_webMain);
+            this.Controls.Add(new WebViewSearch(_app));
+
             #region [ INIT CONTROL ]
 
             var ui_move = new ControlTransparent()
@@ -333,8 +321,8 @@ namespace browser
             ui_close.MouseDoubleClick += (se, ev) => this.Close();
             ui_close.MouseMove += f_form_move_MouseDown;
 
-            this.Controls.Add(ui_browser);
-            ui_browser.MenuHandler = new MenuHandler();
+            ////////this.Controls.Add(ui_browser);
+            ////////ui_browser.MenuHandler = new MenuHandler();
 
             ContextMenuStrip myMenu = new ContextMenuStrip();
             this.ContextMenuStrip = myMenu;
@@ -380,14 +368,9 @@ namespace browser
 
                 ui_resize.Location = new Point(this.Width - _SIZE_BOX, this.Height - _SIZE_BOX);
                 ui_resize.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-
-                ui_browser.Dock = DockStyle.Fill;
-                ui_browser.SendToBack();
-
-                //_app.appInfo.Width = this.Width;
-                //_app.appInfo.Height = this.Height;
-                //_app.appInfo.Top = this.Top;
-                //_app.appInfo.Left = this.Left;
+                                
+                ui_webMain.onReady(this);
+                ui_webMain.SendToBack();
             };
             this.FormClosing += (se, ev) => {
                 _app.appInfo.Width = this.Width;
@@ -402,19 +385,19 @@ namespace browser
             switch (menu_name)
             {
                 case "Reload Page":
-                    this.ui_browser.Stop();
-                    this.ui_browser.Reload();
+                    this.ui_webMain.Stop();
+                    this.ui_webMain.Reload();
                     break;
                 case "Show DevTools":
-                    this.ui_browser.ShowDevTools();
+                    this.ui_webMain.ShowDevTools();
                     break;
                 case "Go Url":
                     string url = Microsoft.VisualBasic.Interaction.InputBox("Input URL:", "Go page", "http://");
                     Uri u;
                     if (Uri.TryCreate(url, UriKind.Absolute, out u))
                     {
-                        this.ui_browser.Stop();
-                        this.ui_browser.Load(url);
+                        this.ui_webMain.Stop();
+                        this.ui_webMain.Load(url);
                     }
                     break;
                 case "Width = 480":

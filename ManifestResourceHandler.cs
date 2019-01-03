@@ -34,7 +34,7 @@ namespace browser
         Stream GenerateStreamFromString(string[] files)
         {
             string css = "";
-            if (_app.appInfo.registerSchemeCore != null) css = _app.appInfo.registerSchemeCore.Scheme + "://" + _app.appInfo.registerSchemeCore.Host + "/core.css";
+            if (_app.appInfo.coreJs != null) css = _app.appInfo.coreJs.Scheme + "://" + _app.appInfo.coreJs.Host + "/core.css";
 
             StringBuilder bi = new StringBuilder(string.Empty);
             foreach (string fi in files)
@@ -68,8 +68,8 @@ namespace browser
             _lower = _lower.Split(new char[] { '?', '#' })[0];
             string fileName = Path.GetFileName(_lower);
 
-            if (_app.appInfo.registerSchemeCore != null
-                && fileName == _app.appInfo.registerSchemeCore.FileName
+            if (_app.appInfo.coreJs != null
+                && fileName == _app.appInfo.coreJs.fileName
                 && File.Exists(fileName))
             {
                 mimeType = "text/javascript";

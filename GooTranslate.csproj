@@ -52,7 +52,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>icon2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CefSharp">
@@ -140,6 +140,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WebViewMain.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WebViewSearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -152,7 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Gma.System.MouseKeyHook\HotKeys\ReadMe.txt" />
-    <Content Include="icon.ico" />
+    <Content Include="icon2.ico" />
+    <Content Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
