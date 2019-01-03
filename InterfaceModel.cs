@@ -46,7 +46,7 @@ namespace browser
                 Scheme = "https",
                 Host = "www.google-analytics.com",
                 fileName = "analytics.js",
-                appendFiles = new string[] { "jquery.min.js", "core.css", "vue.min.js", "w2ui.min.css", "w2ui.min.js" }
+                appendFiles = new string[] { "core.css", "jquery.min.js", "vue.min.js", "components.js", "components.css", "w2ui.min.css", "w2ui.min.js" }
             };
             this.Url = "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi";
             //-----------------------------------------------------------------------------------------------------------

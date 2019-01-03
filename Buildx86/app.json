@@ -11,9 +11,10 @@
     "Host": "www.google-analytics.com",
     "fileName": "analytics.js",
     "appendFiles": [
-      "jquery.min.js",
       "core.css",
+      "jquery.min.js",
       "vue.min.js",
+      "components.js",
       "w2ui.min.css",
       "w2ui.min.js"
     ]

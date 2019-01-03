@@ -1,0 +1,181 @@
+﻿
+/******************************/
+/* DIALOG */
+
+.dialog {
+    z-index: 999995;
+    background-color: #fff;
+    padding: 0;
+    text-align: center;
+    max-width: 95%;
+    min-width: 250px;
+    max-height: 99%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    overflow: hidden;
+    border: none;
+    border-radius: 3px;
+    opacity: 0;
+}
+
+    .dialog .dialog-header {
+        padding: 25px 0 29px 0;
+        margin: 0px;
+        width: 100%;
+        position: relative;
+        display: inline-block;
+    }
+
+.dialog-overlay {
+    z-index: 999993;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+    .dialog-overlay.dialog-overlay-transparent {
+        background-color: transparent;
+    }
+
+.dialog-overlay-transparent.screen-toast {
+    height: 100%;
+}
+
+.dialog .dialog-layout {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    /* background-color: red; */
+}
+
+.dialog .dialog-header {
+    padding: 20px 0 29px 0;
+}
+
+    .dialog .dialog-header.header-bar {
+        padding: 10px 0 6px 0;
+    }
+
+        .dialog .dialog-header.header-bar .dialog-message {
+            line-height: 40px;
+            font-weight: bold;
+        }
+
+    .dialog .dialog-header .dialog-icon {
+        float: left;
+        margin: 0 20px;
+    }
+
+    .dialog .dialog-header .dialog-message {
+        float: left;
+        line-height: 40px;
+    }
+
+
+    .dialog .dialog-header .icon-none {
+        float: none;
+        width: 100%;
+        /* padding: 0 20px 0 20px; */
+        text-align: center;
+    }
+
+.dialog .dialog-content {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    display: inline-block;
+    border-top: 1px solid #E6E6E6;
+    height: auto;
+    /*background: red;*/
+}
+
+
+.dialog .dialog-footer {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    border-top: 1px solid #C8C8C8;
+    height: 47.5px;
+    left: auto;
+    text-align: right;
+    position: relative;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+    .dialog .dialog-footer .btn {
+        font-size: 20px;
+        padding: 0;
+        color: #007DA8;
+    }
+
+    .dialog .dialog-footer .btn-ok {
+        position: absolute;
+        right: 45.5px;
+        top: 10px;
+    }
+
+        .dialog .dialog-footer .btn-ok.is-disable {
+            opacity: 0.5;
+        }
+
+    .dialog .dialog-footer .btn-cancel {
+        position: absolute;
+        right: 142.5px;
+        top: 10px;
+    }
+
+.screen-toast {
+    height: 52px;
+}
+
+.screen-toast-widget-remove + .dialog-overlay.dialog-overlay-transparent {
+    background-color: rgba(0,0,0,0.5);
+}
+
+.dialog.blank-screen {
+    position: fixed;
+    transform: none;
+    top: 0px;
+    bottom: 0;
+    left: 84px;
+    right: 0;
+    border-radius: 0px;
+    padding: 0;
+    margin: 0;
+    width: calc(100% - 84px);
+    height: 100vh;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+    .dialog.blank-screen .dialog-layout {
+        display: none;
+    }
+
+@media (min-width: 1000px) {
+    .dialog .dialog-footer {
+        height: 50.5px;
+    }
+
+        .dialog .dialog-footer .btn-ok {
+            position: absolute;
+            right: 56px;
+            top: 10px;
+        }
+
+        .dialog .dialog-footer .btn-cancel {
+            position: absolute;
+            right: 156px;
+            top: 10px;
+        }
+}
