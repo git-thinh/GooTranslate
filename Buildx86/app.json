@@ -9,7 +9,14 @@
   "coreJs": {
     "Scheme": "https",
     "Host": "www.google-analytics.com",
-    "fileName": "analytics.js"
+    "fileName": "analytics.js",
+    "appendFiles": [
+      "jquery.min.js",
+      "core.css",
+      "vue.min.js",
+      "w2ui.min.css",
+      "w2ui.min.js"
+    ]
   },
   "disableHosts": []
 }

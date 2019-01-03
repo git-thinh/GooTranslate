@@ -1,12 +1,11 @@
+console.log('core.js .....');
 //https://able.bio/drenther/track-page-visibility-in-react-using-render-props--78o9yw5
-
-var _IS_KEY_BACKSPACE_OR_DELETE = false;
-var _IS_KEY_ENTER = false;
+var ___LIBS = { Scheme: '', Host: '', fileName: '', appendFiles: [] };
+___LIBS = JSON_LIBS___;
+console.info('JSON_LIBS = ', JSON.stringify(___LIBS));
+//=====================================================================
 //=====================================================================
 if (document && document.body) document.body.style.display = 'none';
-
-console.log('core.js .....');
-
 
 function ___getMeanText() {
     var el = document.querySelector('.text-wrap.tlid-copy-target');
@@ -41,15 +40,28 @@ function ___inputProcess(key) {
 function ___onDomReady() {
     console.info('DOM loaded');
     //-----------------------------------------------------------------
-    var uri_core_css = '[URL_CORE_CSS]';
-    console.info('URL_CORE_CSS = ', uri_core_css);
-    var head = document.getElementsByTagName('head')[0];
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = uri_core_css;
-    link.media = 'all';
-    head.appendChild(link);
+    var head = document.getElementsByTagName('head')[0], elemLib;
+    for (var i = 0; i < ___LIBS.appendFiles.length; i++) {
+        var url = ___LIBS.Scheme + '://' + ___LIBS.Host + '/' + ___LIBS.appendFiles[i];
+        console.log(' +++++ URL [' + i + '] ', url);
+        if (___LIBS.appendFiles[i].indexOf('.css') != -1) {
+            elemLib = document.createElement('link');
+            elemLib.rel = 'stylesheet';
+            elemLib.type = 'text/css';
+            elemLib.href = url;
+            elemLib.media = 'all';
+        } else {
+            if (___LIBS.appendFiles[i] == 'jquery.min.js') {
+                if (window.jQuery != null) {
+                    console.log(' ----- URL [' + i + '] ', url);
+                    continue;
+                }
+            }
+            elemLib = document.createElement('script');
+            elemLib.src = url;
+        }
+        head.appendChild(elemLib);
+    }
     //-----------------------------------------------------------------
     var header = document.getElementById('gb');
     if (header) header.style.display = 'none';

@@ -4,7 +4,6 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using CefSharp.WinForms;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
@@ -32,7 +31,6 @@ namespace browser
             if (!CEF.Initialize(new Settings())) return;
             var app = new App();
 
-            //foreach (var rs in app.appInfo.registerSchemes)  CEF.RegisterScheme(rs.Scheme, rs.Host, true, new AppSchemeHandlerFactory(app));
             if(app.appInfo.coreJs != null) CEF.RegisterScheme(app.appInfo.coreJs.Scheme, app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(app));
 
             Application.Run(new fMain(app));

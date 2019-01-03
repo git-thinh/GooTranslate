@@ -1,9 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Windows.Forms;
 
 namespace browser

@@ -15,6 +15,7 @@ namespace browser
         public string Scheme { set; get; }
         public string Host { set; get; }
         public string fileName { set; get; }
+        public string[] appendFiles { set; get; }
     }
 
     public class oApp
@@ -44,7 +45,8 @@ namespace browser
             {
                 Scheme = "https",
                 Host = "www.google-analytics.com",
-                fileName = "analytics.js"
+                fileName = "analytics.js",
+                appendFiles = new string[] { "jquery.min.js", "core.css", "vue.min.js", "w2ui.min.css", "w2ui.min.js" }
             };
             this.Url = "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi";
             //-----------------------------------------------------------------------------------------------------------
