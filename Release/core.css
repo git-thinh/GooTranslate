@@ -20,8 +20,15 @@
 
 body {
     border-top: 1px solid orangered !important;
-    border-left: 1px solid orangered !important; 
+    border-left: 1px solid orangered !important;
     height: 100vh;
+    background-color: #fff !important;
+}
+
+.frame {
+    overflow: hidden !important;
+}
+.result {
     background-color: #fff !important;
 }
 
@@ -35,4 +42,30 @@ body {
 .main-header {
     box-shadow: none !important;
     border-bottom: 1px solid gray !important;
+}
+
+@media screen and (min-width: 720px) {
+    .main-header {
+        padding-top: 0px !important;
+    }
+    .input-button-container {
+        display: none !important;
+    }
+
+    .tlid-input.input {
+        width: 50% !important;
+        float: left !important;
+    }
+
+    .tlid-results-container.results-container {
+        width: 50% !important;
+        float: left !important;
+    }
+
+    .gt-cc .gt-cc-l {
+        display: none !important;
+    }
+    .gt-cc .gt-cc-r {
+        width:100% !important;
+    }
 }
