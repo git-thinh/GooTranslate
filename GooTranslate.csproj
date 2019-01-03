@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiJavascript.cs" />
     <Compile Include="ControlTransparent.cs">
       <SubType>Component</SubType>
     </Compile>

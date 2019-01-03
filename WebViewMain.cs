@@ -25,11 +25,23 @@ namespace browser
             {
                 Dock = DockStyle.Fill
             };
-            _webView.PropertyChanged += (sei, evi) =>
+            _webView.PropertyChanged += (se, ev) =>
             {
-                if (evi.PropertyName == "IsBrowserInitialized")
+                if (ev.PropertyName == "IsBrowserInitialized")
                     _webView.Load(this._app.appInfo.Url);
             };
+            _webView.ConsoleMessage += (se, ev) =>
+            {
+                switch (ev.Message)
+                {
+                    case "STATE_READY":
+                        this.Location = new System.Drawing.Point(0, 0);
+                        this.Width = this.Parent.Width;
+                        this.Height = this.Parent.Height;
+                        this.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+                        break;
+                }
+            }; 
             _webView.MenuHandler = new MenuHandler();
             _webView.RequestHandler = this;
 
@@ -37,16 +49,21 @@ namespace browser
             //////////_webView.LoadHandler
             //////////_webView.JsDialogHandler = new WebViewDialogHandler(this);
             ////////_webView.LifeSpanHandler = new ExternalLifeSpanHandler();
+            //browser.LoadingStateChanged += OnLoadingStateChanged;
+            //browser.ConsoleMessage += OnBrowserConsoleMessage;
+            //browser.StatusMessage += OnBrowserStatusMessage;
+            //browser.TitleChanged += OnBrowserTitleChanged;
+            //browser.AddressChanged += OnBrowserAddressChanged;
 
             this.Controls.Add(_webView);
         }
 
         public void onReady(Form main)
         {
-            this.Location = new System.Drawing.Point(0, 0);
-            this.Width = main.Width;
-            this.Height = main.Height;
-            this.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+            //this.Location = new System.Drawing.Point(0, 0);
+            //this.Width = main.Width;
+            //this.Height = main.Height;
+            //this.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
         }
 
         /*///////////////////////////////////////////////////////////////////////////////////////////////////*/

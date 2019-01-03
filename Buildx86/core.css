@@ -25,6 +25,13 @@ body {
     background-color: #fff !important;
 }
 
+.frame {
+    overflow: hidden !important;
+}
+.result {
+    background-color: #fff !important;
+}
+
 .gp-footer,
 .feedback-link,
 .tlid-language-bar.ls-wrap,

@@ -1,7 +1,5 @@
-﻿
-/******************************/
+﻿/******************************/
 /* DIALOG */
-
 .dialog {
     z-index: 999995;
     background-color: #fff;
@@ -179,3 +177,20 @@
             top: 10px;
         }
 }
+
+/*////////////////////////////////////////*/
+/* screen-hook-nav-bottom */
+
+.screen-hook-nav-bottom {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background-color: #ccc;
+    width: 100%;
+    max-width: 100%;
+}
+
+    .screen-hook-nav-bottom .___com.com-nav-bottom {
+    }

@@ -7,6 +7,9 @@ using System.Windows.Forms;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using CefSharp.WinForms;
+using System.Threading;
+using System.Net;
 
 namespace browser
 {
@@ -29,9 +32,14 @@ namespace browser
         static void Main(string[] args)
         {
             if (!CEF.Initialize(new Settings())) return;
+
+            ThreadPool.SetMaxThreads(25, 25);
+            ServicePointManager.DefaultConnectionLimit = 1000;
+
             var app = new App();
 
             if(app.appInfo.coreJs != null) CEF.RegisterScheme(app.appInfo.coreJs.Scheme, app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(app));
+            CEF.RegisterJsObject("___API", new ApiJavascript());
 
             Application.Run(new fMain(app));
             CEF.Shutdown();
@@ -250,6 +258,9 @@ namespace browser
 
         public fMain(IApp app)
         {
+            WebView.CheckForIllegalCrossThreadCalls = false;
+            WebViewMain.CheckForIllegalCrossThreadCalls = false;
+
             this._app = app;
             this.Icon = browser.Properties.Resources.icon;
             this.FormBorderStyle = FormBorderStyle.None;
