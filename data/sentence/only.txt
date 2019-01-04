@@ -1,0 +1,5 @@
+only
+
+Choose the cases:
+- Sync every thing in My Drive
+- Sync only these folders

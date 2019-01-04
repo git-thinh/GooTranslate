@@ -1,0 +1,3 @@
+less
+
+- Allow less secure apps: Some apps and devices use less secure sign-in technology, which could leave your account vulnerable. You can turn off access for these apps (which we recommend) or choose to use them despite the risks.

@@ -1,0 +1,3 @@
+which
+
+- Check your Photos settings to which items from your cloud are shown in App.

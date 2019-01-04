@@ -1,0 +1,3 @@
+continous
+
+- Choose folders from your computer to continously back up to your cloud.
