@@ -355,36 +355,6 @@ function ___screenOpen(screenInfo) {
     frameVue.open();
 }
 //=====================================================================
-function ___getMeanText() {
-    var el = document.querySelector('.text-wrap.tlid-copy-target');
-    if (el) return el.textContent;
-    return '';
-}
-
-function ___inputKeydown(e) {
-    var key = e.keyCode || e.charCode;
-    if (key == 8 || key == 46) {
-        ___inputProcess('DELETE_CHAR');
-        return;
-    }
-}
-
-function ___inputKeypress(e) {
-    var code = (e.keyCode ? e.keyCode : e.which);
-    if (code == 13) {
-        ___inputProcess('ENTER');
-        return;
-    }
-    ___inputProcess('DATA');
-}
-
-function ___inputProcess(key) {
-    setTimeout(function () {
-        var _input = document.getElementById('source').value;
-        console.log(key, _input);
-    }, 100);
-}
-
 function ___onDomReady() {
     console.info('DOM loaded');
     //-----------------------------------------------------------------
@@ -412,35 +382,9 @@ function ___onDomReady() {
         head.appendChild(elemLib);
     }
     //-----------------------------------------------------------------
-    var header = document.getElementById('gb');
-    if (header) header.style.display = 'none';
-    //-----------------------------------------------------------------
-    //document.body.addEventListener('DOMSubtreeModified', function () {
-    //    var time = 'DOM Changed at ' + new Date();
-    //    console.log(time);
-    //}, false);
-
-    //var elSuggest = document.getElementById('gt-src-is')
-    //if (elSuggest) elSuggest.addEventListener('DOMSubtreeModified', function (event) {
-    //    var source = document.getElementById('source');
-    //    if (source) {
-    //        var _input = source.value;
-    //        console.log(_input);
-    //    }
-    //}, false);
-    //-----------------------------------------------------------------
-    var elSource = document.getElementById('source');
-    if (elSource) {
-        elSource.setAttribute('onkeypress', '___inputKeypress(event, this.value.trim())');
-        elSource.setAttribute('onkeydown', '___inputKeydown(event)');
-    }
-    //-----------------------------------------------------------------
     setTimeout(function () {
-        console.log('STATE_READY');
+        var coreApi = new CoreInterface();
+        coreApi.setup();
     }, 100);
-    setTimeout(function () {
-        ___screenOpen(___SCREENS.NAV_BOTTOM);
-    }, 300);
 }
-
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ___onDomReady); else ___onDomReady();

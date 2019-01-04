@@ -25,7 +25,7 @@ namespace browser
             _objApp = new oApp();
             try
             {
-                if (File.Exists("app.json")) _objApp = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json")); 
+                if (File.Exists("app.json")) _objApp = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
             }
             catch { }
         }
