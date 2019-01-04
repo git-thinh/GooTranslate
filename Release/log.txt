@@ -1,8 +1,9 @@
 ----> https://www.google-analytics.com/analytics.js
-----> https://www.google-analytics.com/core.css
+----> https://www.google-analytics.com/w2ui.min.css
 ----> https://www.google-analytics.com/jquery.min.js
 ----> https://www.google-analytics.com/w2ui.min.js
 ----> https://www.google-analytics.com/vue.min.js
-----> https://www.google-analytics.com/components.js
-----> https://www.google-analytics.com/components.css
-----> https://www.google-analytics.com/w2ui.min.css
+----> https://www.google-analytics.com/translate/core.js
+----> https://www.google-analytics.com/translate/core.css
+----> https://www.google-analytics.com/translate/components.js
+----> https://www.google-analytics.com/translate/components.css
