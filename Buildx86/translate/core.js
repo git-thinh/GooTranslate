@@ -10,15 +10,8 @@ CoreInterface.prototype = {
         //    var time = 'DOM Changed at ' + new Date();
         //    console.log(time);
         //}, false);
-
-        //var elSuggest = document.getElementById('gt-src-is')
-        //if (elSuggest) elSuggest.addEventListener('DOMSubtreeModified', function (event) {
-        //    var source = document.getElementById('source');
-        //    if (source) {
-        //        var _input = source.value;
-        //        console.log(_input);
-        //    }
-        //}, false);
+         
+        if (this._elSuggestion) this._elSuggestion.addEventListener('DOMSubtreeModified', this.suggestion_eventChange, false);
         //-----------------------------------------------------------------
         var elSource = document.getElementById('source');
         if (elSource) {
@@ -55,9 +48,23 @@ CoreInterface.prototype = {
     },
     ___inputProcess: function (key) {
         setTimeout(function () {
-            var _input = document.getElementById('source').value;
-            console.log(key, _input);
+            //var _input = document.getElementById('source').value;
+            //console.log(key, _input);
+            ___CORE.suggestion_getData();
         }, 100);
+    },
+    //========================================================================
+    suggestion_eventChange: function (e) {
+        //___CORE.suggestion_getData();
+    },
+    suggestion_getData: function () {
+        var ell = this._elSuggestion.querySelectorAll('.gt-is-itm .gt-is-sg');
+        var elr = this._elSuggestion.querySelectorAll('.gt-is-itm .gt-is-tr');
+        for (var i = 0; i < ell.length; i++) {
+            var text = ell[i].textContent;
+            var mean = elr[i].textContent;
+            console.log(text, mean);
+        }
     },
     suggestion_Show: function () {
         this._elSuggestion.style.display = 'inline-block';

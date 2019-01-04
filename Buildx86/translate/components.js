@@ -241,6 +241,10 @@ Vue.component('com-nav-bottom', {
                             case 'id_toolbar_suggestion':
                                 _self.suggestion_Show();
                                 break;
+                            default:
+                                var id = '#tb_' + this.name + '_item_' + w2utils.escapeId(event.target);
+                                $(id).w2overlay('<div style="margin:8px;">Pressed ' + (new Date().getTime()) + '</div>');
+                                break;
                         }
                     },
                     items: [
