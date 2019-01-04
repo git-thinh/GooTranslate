@@ -59,6 +59,7 @@ namespace browser
 
             string jsonApp = JsonConvert.SerializeObject(_app.appInfo, Formatting.Indented);
             File.WriteAllText("app.json", jsonApp);
+            Thread.Sleep(1000);
         }
 
         /*/////////////////////////////////////////////////////////////*/

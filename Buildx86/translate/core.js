@@ -1,4 +1,6 @@
-function CoreInterface() { this._data1 = '123'; }
+function CoreInterface() {
+    this._elSuggestion = document.getElementById('gt-src-is');
+}
 CoreInterface.prototype = {
     setup: function () {
         var header = document.getElementById('gb');
@@ -20,8 +22,8 @@ CoreInterface.prototype = {
         //-----------------------------------------------------------------
         var elSource = document.getElementById('source');
         if (elSource) {
-            elSource.setAttribute('onkeypress', '___inputKeypress(event, this.value.trim())');
-            elSource.setAttribute('onkeydown', '___inputKeydown(event)');
+            elSource.setAttribute('onkeypress', '___CORE.___inputKeypress(event, this.value.trim())');
+            elSource.setAttribute('onkeydown', '___CORE.___inputKeydown(event)');
         }
         //-----------------------------------------------------------------
         setTimeout(function () {
@@ -39,22 +41,35 @@ CoreInterface.prototype = {
     ___inputKeydown: function (e) {
         var key = e.keyCode || e.charCode;
         if (key == 8 || key == 46) {
-            ___inputProcess('DELETE_CHAR');
+            this.___inputProcess('DELETE_CHAR');
             return;
         }
     },
     ___inputKeypress: function (e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) {
-            ___inputProcess('ENTER');
+            this.___inputProcess('ENTER');
             return;
         }
-        ___inputProcess('DATA');
+        this.___inputProcess('DATA');
     },
     ___inputProcess: function (key) {
         setTimeout(function () {
             var _input = document.getElementById('source').value;
             console.log(key, _input);
         }, 100);
+    },
+    suggestion_Show: function () {
+        this._elSuggestion.style.display = 'inline-block';
+    }
+};
+___CORE = new CoreInterface();
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+___CORE_INTERFACE_MIXIN = {
+    methods: {
+        suggestion_Show: function () {
+            ___CORE.suggestion_Show();
+        } 
     }
 };

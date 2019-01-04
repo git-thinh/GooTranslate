@@ -192,7 +192,7 @@ ___SCREENS_COMMON_MIXIN = {
 / COMPONENTS
 /================================================================================================*/
 Vue.component('com-nav-bottom', {
-    mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN],
+    mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN, ___CORE_INTERFACE_MIXIN],
     template: '<div :id="el_id"></div>',
     data: function () {
         return {
@@ -236,6 +236,13 @@ Vue.component('com-nav-bottom', {
                 $(_self.$el).w2toolbar({
                     name: _self.uc_toolbar_name,
                     style: 'background:#fff;',
+                    onClick: function (tbEvent) {
+                        switch (tbEvent.target) {
+                            case 'id_toolbar_suggestion':
+                                _self.suggestion_Show();
+                                break;
+                        }
+                    },
                     items: [
                         {
                             type: 'menu-radio', id: 'item2', icon: 'fa fa-bars',
@@ -253,6 +260,7 @@ Vue.component('com-nav-bottom', {
                         },
                         { type: 'button', id: 'id_toolbar_home', text: '', icon: 'icon-basic-home' },
                         { type: 'button', id: 'id_toolbar_search', text: '', icon: 'icon-basic-magnifier' },
+                        { type: 'button', id: 'id_toolbar_suggestion', text: '', icon: 'fa fa-list-ol' },
                         { type: 'spacer' },
                         { type: 'button', id: 'id_toolbar_task', text: '', icon: 'icon-basic-mixer2', count: 7, },
                         { type: 'button', id: 'id_toolbar_mail', text: '', icon: 'fa fa-envelope-o', count: 7, },

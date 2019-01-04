@@ -1,11 +1,11 @@
 {
-  "alwayOnTop": false,
+  "alwayOnTop": true,
   "hasWriteLog": true,
   "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",
-  "Width": 600,
-  "Height": 480,
-  "Top": 346,
-  "Left": 851,
+  "Width": 919,
+  "Height": 647,
+  "Top": 220,
+  "Left": 559,
   "coreJs": {
     "Scheme": "https",
     "Host": "www.google-analytics.com",
