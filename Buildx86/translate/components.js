@@ -15,7 +15,7 @@
             }
             this._eleID = _id;
         },
-        props: ['objScreens', 'screenInfo'],
+        props: ['objCore', 'objScreens', 'screenInfo'],
         computed: {
         },
         methods: {
@@ -353,7 +353,63 @@ Vue.component('com-nav-bottom', {
     }
 });
 
+Vue.component('com-dictionary', {
+    mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN, ___CORE_INTERFACE_MIXIN],
+    template: '<div :id="el_id"><ul><li v-for="(index, it) in items" @click="itemClick(it)"><label>{{it.text}}</label><p>{{it.mean}}</p><ol><li><em>More</em><li></ol></li></ul></div>',
+    data: function () {
+        var _self = this;
 
+        //console.log('Dictionary = ', ___DATA.objCore.Translate.Dictionary);
+        //console.log('objCore = ', _self.objCore);
+        //console.log('screenInfo = ', _self.screenInfo);
+
+        var _items = [];
+        for (var key in ___DATA.objCore.Translate.Dictionary) {
+            _items.push({ id: key.split(' ').join('_'), text: key, mean: ___DATA.objCore.Translate.Dictionary[key] });
+        }
+        console.log('_items = ', _items);
+
+        return {
+            code: 'com-dictionary',
+            el_id: 'com-' + this._uid + '-' + (new Date().getTime()),
+            items: _items
+        };
+    },
+    beforeDestroy: function () {
+        var _self = this;
+        f_log(_self.code + ':: beforeDestroy');
+        _self.freeResource();
+    },
+    destroyed: function () {
+        var _self = this;
+        f_log(_self.code + ':: destroyed');
+    },
+    beforeCompile: function () {
+        var _self = this;
+        f_log(_self.code + ':: beforeCompile');
+        this.f_base_hide();
+    },
+    compiled: function () {
+        var _self = this;
+        f_log(_self.code + ':: compiled');
+    },
+    ready: function () {
+        var _self = this;
+        f_log(_self.code + ':: ready');
+        _self.setup();
+    },
+    methods: {
+        setup: function () {
+        },
+        freeResource: function () {
+        },
+        itemClick: function (item) {
+            var _self = this;
+            console.log('SELECTED = ', JSON.stringify(item));
+            _self.translate_Execute(item.text);
+        }
+    }
+});
 
 
 

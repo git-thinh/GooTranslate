@@ -1,15 +1,12 @@
-var ___CORE;
-var f_log = 1 ? console.log.bind(console, 'UI: ') : function () { };
+var ___CORE, ___SCREENS, ___DATA, ___CORE_INTERFACE_MIXIN;
+var f_log = 1 ? console.log.bind(console, '') : function () { };
 console.log('core.js .....');
 //https://able.bio/drenther/track-page-visibility-in-react-using-render-props--78o9yw5
 //=====================================================================
-var ___DATA = { objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
+___DATA = { objCore: {}, objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
 ___DATA.objLibs = JSON_LIBS___;
 console.info('___DATA = ', JSON.stringify(___DATA));
-var ___SCREENS = {
-    NAV_BOTTOM: { Id: 'navi-bottom-1001', className: 'screen-hook-nav-bottom', Components: 'com-nav-bottom', overlayVisiable: false, Footer: { buttonOk: false, buttonCancel: false } }
-};
-var ___CORE_INTERFACE_MIXIN = { methods: {} };
+___CORE_INTERFACE_MIXIN = { methods: {} };
 function ___screenOpen(screenInfo) {
     if (screenInfo == null || screenInfo.Id == null) {
         console.error('Function f_hui_screenOpen(screenInfo) must be screenInfo = { Id: _SCREENS_ID.xxx, ... } ', screenInfo);

@@ -1,0 +1,6 @@
+C:\GooTranslate\GooTranslate\midis\midis\obj\Debug\midis.csprojAssemblyReference.cache
+C:\GooTranslate\GooTranslate\midis\midis\obj\Debug\midis.csproj.CoreCompileInputs.cache
+C:\GooTranslate\GooTranslate\midis\midis\bin\Debug\midis.exe
+C:\GooTranslate\GooTranslate\midis\midis\bin\Debug\midis.pdb
+C:\GooTranslate\GooTranslate\midis\midis\obj\Debug\midis.exe
+C:\GooTranslate\GooTranslate\midis\midis\obj\Debug\midis.pdb

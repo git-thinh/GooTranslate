@@ -33,7 +33,95 @@ namespace browser
         public void webViewMain_Reload() { if (_formMain != null) _formMain.webViewMain_Reload(); }
         public void webViewMain_ShowDevTools() { if (_formMain != null) _formMain.webViewMain_ShowDevTools(); }
         public void webViewMain_Stop() { if (_formMain != null) _formMain.webViewMain_Stop(); }
-        
+
+        public void f_link_getHtmlOnline(string url)
+        {
+            ///////* https://stackoverflow.com/questions/4291912/process-start-how-to-get-the-output */
+            //////Process process = new Process();
+            //////process.StartInfo.FileName = "curl.exe";
+            ////////process.StartInfo.Arguments = url;
+            ////////process.StartInfo.Arguments = "--insecure " + url;
+            ////////process.StartInfo.Arguments = "--max-time 5 -v " + url; /* -v url: handle error 302 found redirect localtion*/
+            //////process.StartInfo.Arguments = "-m 5 -v " + url; /* -v url: handle error 302 found redirect localtion*/
+            //////process.StartInfo.UseShellExecute = false;
+            //////process.StartInfo.RedirectStandardOutput = true;
+            //////process.StartInfo.RedirectStandardError = true;
+            //////process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            //////process.Start();
+            ////////* Read the output (or the error)
+            //////string html = process.StandardOutput.ReadToEnd();
+            //////if (string.IsNullOrEmpty(html))
+            //////{
+            //////    string err = process.StandardError.ReadToEnd(), urlDirect = string.Empty;
+
+            //////    int pos = err.IndexOf("< Location: ");
+            //////    if (pos != -1)
+            //////    {
+            //////        urlDirect = err.Substring(pos + 12, err.Length - (pos + 12)).Split(new char[] { '\r', '\n' })[0].Trim();
+            //////        if (urlDirect[0] == '/')
+            //////        {
+            //////            Uri uri = new Uri(url);
+            //////            urlDirect = uri.Scheme + "://" + uri.Host + urlDirect;
+            //////        }
+
+            //////        Console.WriteLine("-> Redirect: " + urlDirect);
+
+
+            //////        html = f_link_getHtmlCache(urlDirect);
+            //////        if (string.IsNullOrEmpty(html))
+            //////        {
+            //////            return "<script> location.href='" + urlDirect + "'; </script>";
+            //////        }
+            //////        else
+            //////            return html;
+            //////    }
+            //////    else
+            //////    {
+            //////        Console.WriteLine(" ??????????????????????????????????????????? ERROR: " + url);
+            //////    }
+
+            //////    Console.WriteLine(" -> Fail: " + url);
+
+            //////    return null;
+            //////}
+
+            //////Console.WriteLine(" -> Ok: " + url);
+
+            //////string title = Html.f_html_getTitle(html);
+            //////html = _htmlFormat(url, html);
+            //////f_cacheUrl(url);
+            //////CACHE.TryAdd(url, html);
+
+            ////////string err = process.StandardError.ReadToEnd();
+            //////process.WaitForExit();
+
+            //////if (_fomMain != null) _fomMain.f_browser_updateInfoPage(url, title);
+
+            //////return html;
+
+            ////////////* Create your Process
+            //////////Process process = new Process();
+            //////////process.StartInfo.FileName = "curl.exe";
+            //////////process.StartInfo.Arguments = url;
+            //////////process.StartInfo.UseShellExecute = false;
+            //////////process.StartInfo.RedirectStandardOutput = true;
+            //////////process.StartInfo.RedirectStandardError = true;
+            //////////process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            ////////////* Set your output and error (asynchronous) handlers
+            //////////process.OutputDataReceived += (se, ev) => {
+            //////////    string html = ev.Data;
+
+            //////////    _link.TryAdd(url, _link.Count + 1);
+            //////////    _html.TryAdd(url, html);
+            //////////};
+            ////////////process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+            ////////////* Start process and handlers
+            //////////process.Start();
+            //////////process.BeginOutputReadLine();
+            //////////process.BeginErrorReadLine();
+            //////////process.WaitForExit(); 
+        }
+
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
