@@ -105,7 +105,7 @@ function ___screenOpen(screenInfo) {
     var scom = '';
     if (com_names != null && com_names.length > 0) {
         screenInfo._screenComponentRef = 'ref_scrollv_yxxx_xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }).toUpperCase();
-        if (typeof com_names === 'string') scom = '<div class="___com ' + com_names + '"><' + com_names + ' ' + _HOMEUI_VUE_COMS_DATA_SHARED + ' ref="' + screenInfo._screenComponentRef + '"></' + com_names + '></div>';
+        if (typeof com_names === 'string') scom = '<div class="___com ' + com_names + '"><' + com_names + ' ' + ___PROPS_DATA_SHARED + ' ref="' + screenInfo._screenComponentRef + '"></' + com_names + '></div>';
         //else com_names.forEach(function (ci) { scom += '<' + ci + '></' + ci + '>'; });
     }
     if (scom.length > 0) {
@@ -147,7 +147,7 @@ function ___screenOpen(screenInfo) {
     ///////////////////////////////////////////////////////////////////////
     //console.log(temp);
     var vueScreenExtend = Vue.extend({
-        mixins: [_HOMEUI_VUE_MIXIN_COMS, _SCREENS_COMMON_VUE_MIXIN],
+        mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN],
         template: temp,
         created: function () {
             //console.log('=============== dialog.created:: DATA = ', this.$data);
