@@ -69,14 +69,15 @@ namespace browser
             _lower = _lower.Split(new char[] { '?', '#' })[0];
             string fileName = Path.GetFileName(_lower);
 
-            if (_app.appInfo.coreJs != null
-                && fileName == _app.appInfo.coreJs.fileName
-                && File.Exists(fileName))
+            if (_app.appInfo.coreJs != null && fileName == _app.appInfo.coreJs.fileName)
             {
                 mimeType = "text/javascript";
                 stream = GenerateStreamFromString(new string[] { fileName, "core.js" });
                 return true;
             }
+
+            Uri uri = new Uri(_lower);
+            fileName = uri.AbsolutePath.Substring(1).Replace('/','\\');
 
             if (File.Exists(fileName))
             {

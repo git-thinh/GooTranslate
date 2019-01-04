@@ -51,7 +51,10 @@ namespace browser
                 Scheme = "https",
                 Host = "www.google-analytics.com",
                 fileName = "analytics.js",
-                appendFiles = new string[] { "core.translate.js", "core.css", "jquery.min.js", "w2ui.min.js", "vue.min.js", "components.js", "components.css", "w2ui.min.css", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" }
+                appendFiles = new string[] {
+                    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css", "w2ui.min.css", "jquery.min.js", "w2ui.min.js", "vue.min.js",
+                    "translate/core.js", "translate/core.css", "translate/components.js", "translate/components.css"
+                }
             };
             this.Url = "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi";
             //-----------------------------------------------------------------------------------------------------------
