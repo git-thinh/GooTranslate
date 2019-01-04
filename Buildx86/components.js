@@ -86,9 +86,6 @@
         }
     };
 ___COMS_MIXIN.props.forEach(function (v) { ___PROPS_DATA_SHARED += ' :' + v + '="' + v + '" '; });
-/*================================================================================================
-/ SCREENS COMMONS: Screen Error, Screen Alert, Screen Confirm ...
-/================================================================================================*/
 ___SCREENS_COMMON_MIXIN = {
     methods: {
         screenOpen: function (options) {
@@ -194,24 +191,6 @@ ___SCREENS_COMMON_MIXIN = {
 /*================================================================================================
 / COMPONENTS
 /================================================================================================*/
-////////Vue.component('com-nav-bottom', {
-////////    mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN], 
-////////    template: '<ul><li v-for="(it, index) in items" v-html="[\'item-\' + it]"></li></ul>',
-////////    data: function () {
-////////        var _self = this; 
-////////        var cf = { items: [1, 2, 3, 4, 5] };
-////////        return cf;
-////////    },
-////////    computed: {
-////////    },
-////////    mounted: function () {
-////////    },
-////////    methods: {
-////////    },
-////////    watch: {
-////////    }
-////////});
-
 Vue.component('com-nav-bottom', {
     mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN],
     template: '<div :id="el_id"></div>',

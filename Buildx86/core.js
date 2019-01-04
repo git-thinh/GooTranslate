@@ -1,3 +1,4 @@
+var ___CORE;
 var f_log = 1 ? console.log.bind(console, 'UI: ') : function () { };
 console.log('core.js .....');
 //https://able.bio/drenther/track-page-visibility-in-react-using-render-props--78o9yw5
@@ -9,16 +10,6 @@ var ___SCREENS = {
     NAV_BOTTOM: { Id: 'navi-bottom-1001', className: 'screen-hook-nav-bottom', Components: 'com-nav-bottom', overlayVisiable: false, Footer: { buttonOk: false, buttonCancel: false } }
 };
 function ___screenOpen(screenInfo) {
-    //screenInfo: {
-    //    Id: 'SCREEN-ID-SAMPLE-10101',
-    //        title: g_lang.s_HTag_Language + ' (example)',
-    //            style: {
-    //        //                      'width': '690px',
-    //        //                      'height': 'auto',
-    //        //                      'min-height': '234px'
-    //    }
-    //}
-
     if (screenInfo == null || screenInfo.Id == null) {
         console.error('Function f_hui_screenOpen(screenInfo) must be screenInfo = { Id: _SCREENS_ID.xxx, ... } ', screenInfo);
         return;
@@ -150,44 +141,20 @@ function ___screenOpen(screenInfo) {
         mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN],
         template: temp,
         created: function () {
-            //console.log('=============== dialog.created:: DATA = ', this.$data);
-            //console.log('created:: screenInfo = ', this.screenInfo);
         },
         mounted: function () {
-            pushScreen(this);
-            //console.log('mounted:: screenInfo = ', this.screenInfo);
         },
         beforeDestroy: function () {
-            //if (!this.bodyVue._isDestroyed)
-            //    this.bodyVue.$destroy();
-            //this.$el.remove();
-            popScreen(this);
         },
         computed: {
             screenId: function () { return screenInfo.Id; },
             screenInfo: function () {
-                //var _self = this;
-                //if (_self.objScreens != null && _self.objScreens[_self.screenId] != null) {
-                //    return _self.objScreens[_self.screenId];
-                //}
-                //return null;
-                //console.log('???????????????????? ', screenInfo);
                 return screenInfo;
-            },
-            screenTitle: function () {
-                //if (this.screenInfo != null) {
-                //    if (typeof (this.screenInfo.title) == 'string')
-                //        return this.screenInfo.title;
-                //    return String(this.screenInfo.title);
-                //}
-                return '';
             }
         },
         destroyed: function () {
-            //console.log('_HOMEUI_DIALOG_VUE_MIXIN_COMS.destroyed =', this.Options); 
             var _self = this;
             var options = _self.screenInfo;
-            //setTimeout(function () {
 
             var _remove = function (a) {
                 setTimeout(function (_a) {
@@ -203,11 +170,6 @@ function ___screenOpen(screenInfo) {
             if (_screenElem) _screenElem.style.opacity = 0;
             if (_screenElemOverlay) _screenElemOverlay.style.opacity = 0;
 
-            //var _screenElemOverlay = document.getElementById(_self.screenInfo._screenElemOverlayID),
-            //    _screenElem = document.getElementById(_self.screenInfo._screenElemID);
-            //if (_screenElem) _screenElem.remove();
-            //if (_screenElemOverlay) _screenElemOverlay.remove();
-
             _remove([_self.screenInfo._screenElemOverlayID, _self.screenInfo._screenElemID]);
 
             ///////////////////////////////////////////////////////////////////////////////// 
@@ -216,7 +178,6 @@ function ___screenOpen(screenInfo) {
                 options.Footer.eventClosing(this);
             }
             ///////////////////////////////////////////////////////////////////////////////// 
-            //}, 100);
         },
         methods: {
             open: function () {
@@ -235,20 +196,6 @@ function ___screenOpen(screenInfo) {
                     if (_screenElemHeader) hi_header = _screenElemHeader.getBoundingClientRect().height;
                     var hi_bheader = 0;
                     if (_screenElemBodyHeader) hi_bheader = _screenElemBodyHeader.getBoundingClientRect().height;
-
-                    ////if (_screenElemBody && options.scrollVertical == true) {
-                    ////    var hi = _screenElem.getBoundingClientRect().height;
-                    ////    var _top = hi_header + hi_bheader, hi_body = Math.round(hi - _top - 60);
-                    ////    _screenElemBody.style.height = hi_body + 'px';
-                    ////    if (_screenElemBody.clientHeight < _screenElemBody.scrollHeight && options._screenElemBodyScrollVerticalREF) {
-                    ////        //console.log('clientHeight = ' + _screenElemBody.clientHeight + ' < scrollHeight = ' + _screenElemBody.scrollHeight , ' -> CREATE SCROLL ...');
-                    ////        var vueScroll = _self.$refs[options._screenElemBodyScrollVerticalREF];
-                    ////        if (vueScroll && vueScroll.$el) {
-                    ////            vueScroll.$el.style.top = _top + 'px';
-                    ////            vueScroll.f_init();
-                    ////        }
-                    ////    }
-                    ////}
 
                     setTimeout(function () {
                         _screenElem.style.opacity = 1;
@@ -383,8 +330,8 @@ function ___onDomReady() {
     }
     //-----------------------------------------------------------------
     setTimeout(function () {
-        var coreApi = new CoreInterface();
-        coreApi.setup();
-    }, 100);
+        ___CORE = new CoreInterface();
+        ___CORE.setup();
+    }, 300);
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ___onDomReady); else ___onDomReady();
