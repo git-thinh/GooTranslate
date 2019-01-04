@@ -8,6 +8,11 @@ namespace browser
     {
         oApp appInfo { get; }
         void writeLog(string text);
+
+        void webViewMain_Load(string url);
+        void webViewMain_Reload();
+        void webViewMain_ShowDevTools();
+        void webViewMain_Stop();
     }
 
     public class oAppCoreJs

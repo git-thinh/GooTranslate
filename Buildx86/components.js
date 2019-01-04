@@ -1,7 +1,7 @@
-﻿var _SCREENS_COMMON_VUE_MIXIN = {},
+﻿var ___SCREENS_COMMON_MIXIN = {},
     ___SCREEN_EVENT_SUBMIT_ID = {},
-    _HOMEUI_VUE_COMS_DATA_SHARED = '',
-    _HOMEUI_VUE_MIXIN_COMS = {
+    ___PROPS_DATA_SHARED = '',
+    ___COMS_MIXIN = {
         data: {
             _eleID: null
         },
@@ -85,11 +85,11 @@
             }
         }
     };
-_HOMEUI_VUE_MIXIN_COMS.props.forEach(function (v) { _HOMEUI_VUE_COMS_DATA_SHARED += ' :' + v + '="' + v + '" '; });
+___COMS_MIXIN.props.forEach(function (v) { ___PROPS_DATA_SHARED += ' :' + v + '="' + v + '" '; });
 /*================================================================================================
 / SCREENS COMMONS: Screen Error, Screen Alert, Screen Confirm ...
 /================================================================================================*/
-_SCREENS_COMMON_VUE_MIXIN = {
+___SCREENS_COMMON_MIXIN = {
     methods: {
         screenOpen: function (options) {
             var parentId = '';
@@ -195,7 +195,7 @@ _SCREENS_COMMON_VUE_MIXIN = {
 / COMPONENTS
 /================================================================================================*/
 ////////Vue.component('com-nav-bottom', {
-////////    mixins: [_HOMEUI_VUE_MIXIN_COMS, _SCREENS_COMMON_VUE_MIXIN], 
+////////    mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN], 
 ////////    template: '<ul><li v-for="(it, index) in items" v-html="[\'item-\' + it]"></li></ul>',
 ////////    data: function () {
 ////////        var _self = this; 
@@ -213,7 +213,7 @@ _SCREENS_COMMON_VUE_MIXIN = {
 ////////});
 
 Vue.component('com-nav-bottom', {
-    mixins: [_HOMEUI_VUE_MIXIN_COMS, _SCREENS_COMMON_VUE_MIXIN],
+    mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN],
     template: '<div :id="el_id"></div>',
     data: function () {
         return {

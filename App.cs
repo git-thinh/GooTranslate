@@ -15,18 +15,27 @@ namespace browser
 {
     class App : IApp
     {
-        private static oApp _app = null;
-        public oApp appInfo { get { return _app; } }
+        private static fMain _formMain;
+        private static IApp _app;
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+        private static oApp _objApp = null;
+        public oApp appInfo { get { return _objApp; } }
         static App() {
-            _app = new oApp();
+            _objApp = new oApp();
             try
             {
-                if (File.Exists("app.json")) {
-                    //_app = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
-                }
+                if (File.Exists("app.json")) _objApp = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json")); 
             }
             catch { }
         }
+        public void webViewMain_Load(string url) { if (_formMain != null) _formMain.webViewMain_Load(url); }
+        public void webViewMain_Reload() { if (_formMain != null) _formMain.webViewMain_Reload(); }
+        public void webViewMain_ShowDevTools() { if (_formMain != null) _formMain.webViewMain_ShowDevTools(); }
+        public void webViewMain_Stop() { if (_formMain != null) _formMain.webViewMain_Stop(); }
+        
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
 
         [STAThread]
         static void Main(string[] args)
@@ -36,20 +45,24 @@ namespace browser
             ThreadPool.SetMaxThreads(25, 25);
             ServicePointManager.DefaultConnectionLimit = 1000;
 
-            var app = new App();
+            _app = new App();
 
-            if(app.appInfo.coreJs != null) CEF.RegisterScheme(app.appInfo.coreJs.Scheme, app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(app));
-            CEF.RegisterJsObject("___API", new ApiJavascript());
+            if(_app.appInfo.coreJs != null) CEF.RegisterScheme(_app.appInfo.coreJs.Scheme, _app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(_app));
+            CEF.RegisterJsObject("___API", new ApiJavascript(_app));
 
-            Application.Run(new fMain(app));
+            _formMain = new fMain(_app);
+            Application.Run(_formMain);
             CEF.Shutdown();
 
             string log = _log.ToString();
-            if (_app.hasWriteLog) File.WriteAllText("log.txt", log);
+            if (_app.appInfo.hasWriteLog) File.WriteAllText("log.txt", log);
 
-            string jsonApp = JsonConvert.SerializeObject(app.appInfo, Formatting.Indented);
+            string jsonApp = JsonConvert.SerializeObject(_app.appInfo, Formatting.Indented);
             File.WriteAllText("app.json", jsonApp);
         }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
 
         private static StringBuilder _log  = new StringBuilder(string.Empty);
         public void writeLog(string text)
@@ -68,6 +81,7 @@ namespace browser
         const bool m_hook_MouseMove = true;
         bool m_resizing = false;
 
+        /*////////////////////////////////////////////////////////////////////////*/
         /*////////////////////////////////////////////////////////////////////////*/
 
         #region [ MOUSE MOVE: IN FORM, OUT FORM ]
@@ -254,6 +268,7 @@ namespace browser
 
         #endregion
 
+        /*////////////////////////////////////////////////////////////////////////*/
         /*////////////////////////////////////////////////////////////////////////*/
 
         public fMain(IApp app)
@@ -461,6 +476,14 @@ namespace browser
                     break;
             }
         }
+
+        /*////////////////////////////////////////////////////////////////////////*/
+        /*////////////////////////////////////////////////////////////////////////*/
+
+        public void webViewMain_Load(string url) { if (ui_webMain != null) ui_webMain.Load(url); }
+        public void webViewMain_Reload() { if (ui_webMain != null) ui_webMain.Reload(); }
+        public void webViewMain_ShowDevTools() { if (ui_webMain != null) ui_webMain.ShowDevTools(); }
+        public void webViewMain_Stop() { if (ui_webMain != null) ui_webMain.Stop(); }
     }
 
     class MenuHandler : IMenuHandler

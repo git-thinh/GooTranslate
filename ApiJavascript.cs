@@ -8,23 +8,23 @@ namespace browser
 {
     public class ApiJavascript
     {
-        //readonly IApp _app;
-        //public ApiJavascript(IApp app) { this._app = app; }
+        readonly IApp _app;
+        public ApiJavascript(IApp app) { this._app = app; }
 
-        //public void f_api_devtool(String menu)
-        //{
-        //    _browser.f_browser_DevTool();
-        //}
+        public void f_api_devtool(String menu)
+        {
+            _app.webViewMain_ShowDevTools();
+        }
 
-        //public void f_main_openUrl(String url, String title)
-        //{
-        //    _browser.f_browser_Go(url, title);
-        //}
+        public void f_main_openUrl(String url, String title)
+        {
+            _app.webViewMain_Load(url);
+        }
 
-        //public void f_api_reload(String menu)
-        //{
-        //    _browser.f_browser_Reload();
-        //}
+        public void f_api_reload(String menu)
+        {
+            _app.webViewMain_Reload();
+        }
 
         public string f_api_readFile(String file)
         {
