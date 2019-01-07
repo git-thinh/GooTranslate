@@ -1,4 +1,11 @@
-___DATA.objCore.Translate = { Dictionary: {} };
+/*================================================================================================
+/ DATA: CONTRACTOR - CREATE EVENT DATA CHANGE
+/================================================================================================*/
+___DATA_BROADCAST = ['Dictionary'];
+___DATA_BROADCAST.forEach(function (v) { ___registerDataBroadcast(v); });
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 ___SCREENS = {
     NAV_BOTTOM: { Id: 'navi-bottom-1001', className: 'screen-hook-nav-bottom', Components: 'com-nav-bottom', overlayVisiable: false, Footer: { buttonOk: false, buttonCancel: false } },
     DICTIONARY: { Id: 'screen-dictionary-1001', className: 'screen-dictionary', Components: 'com-dictionary', overlayVisiable: false, Footer: { buttonOk: false, buttonCancel: false } },
@@ -136,3 +143,27 @@ ___CORE_INTERFACE_MIXIN = {
         }
     }
 };
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
+////////var o = {};
+////////var bValue = {};
+////////Object.defineProperty(o, 'b', {
+////////    get: function () {
+////////        console.log('[0] loggedObj:: get ===== b ', bValue);
+////////        return bValue;
+////////    },
+////////    set: function (newValue) {
+////////        setTimeout(function () {
+////////            console.log('[1] loggedObj:: set ===== b = ', JSON.stringify(o));
+////////        }, 100);
+////////        bValue = newValue;
+////////    },
+////////    enumerable: true,
+////////    configurable: true
+////////});
+////////o.b; // 38
+
+////////// 'b' property exists in the o object and its value is 38
+////////// The value of o.b is now always identical to bValue,
+////////// unless o.b is redefined

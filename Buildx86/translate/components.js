@@ -15,7 +15,7 @@
             }
             this._eleID = _id;
         },
-        props: ['objCore', 'objScreens', 'screenInfo'],
+        props: ___DATA_SHARED,
         computed: {
         },
         methods: {
@@ -85,7 +85,7 @@
             }
         }
     };
-___COMS_MIXIN.props.forEach(function (v) { ___PROPS_DATA_SHARED += ' :' + v + '="' + v + '" '; });
+___DATA_SHARED.forEach(function (v) { ___PROPS_DATA_SHARED += ' :' + v + '="' + v + '" '; });
 ___SCREENS_COMMON_MIXIN = {
     methods: {
         screenOpen: function (options) {

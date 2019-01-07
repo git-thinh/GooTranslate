@@ -1,11 +1,36 @@
-var ___CORE, ___SCREENS, ___DATA, ___CORE_INTERFACE_MIXIN;
-var f_log = 1 ? console.log.bind(console, '') : function () { };
 console.log('core.js .....');
-//https://able.bio/drenther/track-page-visibility-in-react-using-render-props--78o9yw5
-//=====================================================================
-___DATA = { objCore: {}, objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
+var f_log = 1 ? console.log.bind(console, '') : function () { };
+/*================================================================================================
+/ DATA - BROADCAST
+/================================================================================================*/
+var ___registerDataBroadcast = function (v) {
+    console.log('[0] ___DATA.' + v + ' -> Register ');
+    if (window['___' + v] == null) window['___' + v] = {};
+    Object.defineProperty(___DATA, v, {
+        get: function () {
+            //console.log('[0] ___DATA.' + v + '.Get()');
+            return window['___' + v];
+        },
+        set: function (newValue) {
+            setTimeout(function () {
+                console.log('[1] ___DATA.' + v + '.Set() = ', JSON.stringify(window['___' + v]));
+            }, 100);
+            window['___' + v] = newValue;
+        },
+        enumerable: true,
+        configurable: true
+    });
+}
+var ___DATA = {};
+var ___DATA_SHARED = ['objCore', 'objScreens', 'screenInfo'];
+var ___DATA_BROADCAST = [];
+___DATA_SHARED.forEach(function (v) { ___registerDataBroadcast(v); });
+//////___DATA = { objCore: {}, objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
 ___DATA.objLibs = JSON_LIBS___;
 console.info('___DATA = ', JSON.stringify(___DATA));
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+var ___CORE, ___SCREENS, ___CORE_INTERFACE_MIXIN;
 ___CORE_INTERFACE_MIXIN = { methods: {} };
 function ___screenOpen(screenInfo) {
     if (screenInfo == null || screenInfo.Id == null) {
@@ -299,7 +324,8 @@ function ___screenOpen(screenInfo) {
     ___DATA.objScreens[screenInfo.Id].bodyVue = frameVue;
     frameVue.open();
 }
-//=====================================================================
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 function ___onDomReady() {
     console.info('DOM loaded');
     //-----------------------------------------------------------------
