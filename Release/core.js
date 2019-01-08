@@ -1,14 +1,37 @@
-var ___CORE;
-var f_log = 1 ? console.log.bind(console, 'UI: ') : function () { };
 console.log('core.js .....');
-//https://able.bio/drenther/track-page-visibility-in-react-using-render-props--78o9yw5
-//=====================================================================
-var ___DATA = { objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
+var f_log = 1 ? console.log.bind(console, '') : function () { };
+/*==============================================================
+/ DATA - BROADCAST
+/=============================================================*/
+var ___registerDataBroadcast = function (v) {
+    console.log('[0] ___DATA.' + v + ' -> Register ');
+    if (window['___' + v] == null) window['___' + v] = {};
+    Object.defineProperty(___DATA, v, {
+        get: function () {
+            //console.log('[0] ___DATA.' + v + '.Get()');
+            return window['___' + v];
+        },
+        set: function (newValue) {
+            window['___' + v] = newValue;
+            //setTimeout(function () {
+            console.log('[1] ___DATA.' + v + '.Set() = ', JSON.stringify(window['___' + v]));
+            //}, 100);
+        },
+        enumerable: true,
+        configurable: true
+    });
+}
+var ___DATA = {};
+var ___DATA_SHARED = ['objCore', 'objScreens', 'screenInfo'];
+var ___DATA_BROADCAST = [];
+___DATA_SHARED.forEach(function (v) { ___registerDataBroadcast(v); });
+//////___DATA = { objCore: {}, objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
 ___DATA.objLibs = JSON_LIBS___;
 console.info('___DATA = ', JSON.stringify(___DATA));
-var ___SCREENS = {
-    NAV_BOTTOM: { Id: 'navi-bottom-1001', className: 'screen-hook-nav-bottom', Components: 'com-nav-bottom', overlayVisiable: false, Footer: { buttonOk: false, buttonCancel: false } }
-};
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+var ___CORE, ___SCREENS, ___CORE_INTERFACE_MIXIN;
+___CORE_INTERFACE_MIXIN = { methods: {} };
 function ___screenOpen(screenInfo) {
     if (screenInfo == null || screenInfo.Id == null) {
         console.error('Function f_hui_screenOpen(screenInfo) must be screenInfo = { Id: _SCREENS_ID.xxx, ... } ', screenInfo);
@@ -138,7 +161,7 @@ function ___screenOpen(screenInfo) {
     ///////////////////////////////////////////////////////////////////////
     //console.log(temp);
     var vueScreenExtend = Vue.extend({
-        mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN],
+        mixins: [___COMS_MIXIN, ___SCREENS_COMMON_MIXIN, ___CORE_INTERFACE_MIXIN],
         template: temp,
         created: function () {
         },
@@ -301,7 +324,8 @@ function ___screenOpen(screenInfo) {
     ___DATA.objScreens[screenInfo.Id].bodyVue = frameVue;
     frameVue.open();
 }
-//=====================================================================
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 function ___onDomReady() {
     console.info('DOM loaded');
     //-----------------------------------------------------------------
@@ -329,9 +353,6 @@ function ___onDomReady() {
         head.appendChild(elemLib);
     }
     //-----------------------------------------------------------------
-    setTimeout(function () {
-        ___CORE = new CoreInterface();
-        ___CORE.setup();
-    }, 300);
+    setTimeout(function () { ___CORE.setup(); }, 350);
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ___onDomReady); else ___onDomReady();
