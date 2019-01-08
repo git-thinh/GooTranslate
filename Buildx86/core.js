@@ -1,8 +1,8 @@
 console.log('core.js .....');
 var f_log = 1 ? console.log.bind(console, '') : function () { };
-/*================================================================================================
+/*==============================================================
 / DATA - BROADCAST
-/================================================================================================*/
+/=============================================================*/
 var ___registerDataBroadcast = function (v) {
     console.log('[0] ___DATA.' + v + ' -> Register ');
     if (window['___' + v] == null) window['___' + v] = {};
@@ -12,10 +12,10 @@ var ___registerDataBroadcast = function (v) {
             return window['___' + v];
         },
         set: function (newValue) {
-            setTimeout(function () {
-                console.log('[1] ___DATA.' + v + '.Set() = ', JSON.stringify(window['___' + v]));
-            }, 100);
             window['___' + v] = newValue;
+            //setTimeout(function () {
+            console.log('[1] ___DATA.' + v + '.Set() = ', JSON.stringify(window['___' + v]));
+            //}, 100);
         },
         enumerable: true,
         configurable: true
@@ -353,6 +353,6 @@ function ___onDomReady() {
         head.appendChild(elemLib);
     }
     //-----------------------------------------------------------------
-    setTimeout(function () { ___CORE.setup(); }, 300);
+    setTimeout(function () { ___CORE.setup(); }, 350);
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ___onDomReady); else ___onDomReady();

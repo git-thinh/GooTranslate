@@ -1,6 +1,6 @@
-/*================================================================================================
+/*============================================================
 / DATA: CONTRACTOR - CREATE EVENT DATA CHANGE
-/================================================================================================*/
+/============================================================*/
 ___DATA_BROADCAST = ['Dictionary'];
 ___DATA_BROADCAST.forEach(function (v) { ___registerDataBroadcast(v); });
 
@@ -65,7 +65,7 @@ CoreInterface.prototype = {
             //Boolean f_api_writeFile(String file, String data)
             //___API.f_api_writeFile();
             _self._hasChangeData = false;
-            f_log('AUTO_SAVE: ', ___DATA.objCore.Translate.Dictionary);
+            f_log('AUTO_SAVE: ', ___DATA.Dictionary);
         }
     },
     //========================================================================
@@ -74,8 +74,8 @@ CoreInterface.prototype = {
         var _self = this;
         if (text == null || mean == null || text.length == 0 || mean.length == 0) return false;
         text = text.toLowerCase().trim();
-        if (___DATA.objCore.Translate.Dictionary[text] == null) {
-            ___DATA.objCore.Translate.Dictionary[text] = mean;
+        if (___DATA.Dictionary[text] == null) {
+            ___DATA.Dictionary[text] = mean;
             _self._hasChangeData = true;
             f_log('DICTIONARY_ADD: ', text);
             return true;
@@ -145,25 +145,103 @@ ___CORE_INTERFACE_MIXIN = {
 };
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
-////////var o = {};
-////////var bValue = {};
-////////Object.defineProperty(o, 'b', {
-////////    get: function () {
-////////        console.log('[0] loggedObj:: get ===== b ', bValue);
-////////        return bValue;
-////////    },
-////////    set: function (newValue) {
-////////        setTimeout(function () {
-////////            console.log('[1] loggedObj:: set ===== b = ', JSON.stringify(o));
-////////        }, 100);
-////////        bValue = newValue;
-////////    },
-////////    enumerable: true,
-////////    configurable: true
-////////});
-////////o.b; // 38
+var _SELECT_OBJ = { x: 0, y: 0, text: '', id: '' };
+////////////////////////////////////////////////////////////
+var _CLIENT_ID = 1;
+var _GET_ID = function () { var date = new Date(); var id = _CLIENT_ID + ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + ("0" + date.getHours()).slice(-2) + ("0" + date.getMinutes()).slice(-2) + ("0" + date.getSeconds()).slice(-2) + (date.getMilliseconds() + Math.floor(Math.random() * 100)).toString().substring(0, 3); return parseInt(id); };
+var APP_INFO = { Width: $(window).width() };
+////////////////////////////////////////////////////////////
 
-////////// 'b' property exists in the o object and its value is 38
-////////// The value of o.b is now always identical to bValue,
-////////// unless o.b is redefined
+function f_english_Translate() {
+    if (_SELECT_OBJ != null) {
+        var otran = JSON.parse(JSON.stringify(_SELECT_OBJ));
+        f_log('TRANSLATE ', otran);
+        var text = otran.text.toLowerCase().trim();
+
+        ////if (_.some(_words, function (w) { return w == text; }) == false) _words.push(text);
+
+        ////f_post('//api/translate/v1', otran.text, function (_res) {
+        ////    f_log('OK', _res);
+        ////    if (_res && _res.length > 0) {
+        ////        otran.mean_vi = _res;
+        ////        f_english_TranslateShowResult(otran);
+        ////    } else {
+
+        ////    }
+        ////}, function (_err) {
+        ////    f_log('ERR', _err);
+        ////})
+    }
+}
+
+function f_event_processCenter(event) {
+    var type = event.type,
+        el = event.target,
+        tagName = el.tagName,
+        id = el.id,
+        text = el.innerText,
+        textSelect = '';
+
+    if (id == null || id.trim().length == 0) {
+        var id = _GET_ID();
+        el.setAttribute('id', id);
+    }
+
+    textSelect = window.getSelection().toString();
+    switch (type) {
+        case 'mousedown':
+            //if (console.clear) console.clear();
+
+            var elbox = document.getElementById('___box_tran');
+            if (elbox) elbox.style.display = 'none';
+
+            _SELECT_OBJ = { id: id, cached: false, x: event.x, y: event.y };
+            if (el.className == '___translated') _SELECT_OBJ.cached = true;
+
+            break;
+        case 'mouseup':
+            if (_SELECT_OBJ != null) {
+                _SELECT_OBJ.x = event.x;
+                _SELECT_OBJ.y = event.y;
+                if (textSelect && textSelect.trim().length > 0) _SELECT_OBJ.text = textSelect;
+            }
+            break;
+        case 'click':
+            if (_SELECT_OBJ != null) {
+                if (textSelect && textSelect.trim().length > 0) _SELECT_OBJ.text = textSelect;
+            }
+            break;
+        case 'dblclick':
+            if (_SELECT_OBJ != null) {
+                if (textSelect && textSelect.trim().length > 0) _SELECT_OBJ.text = textSelect;
+            }
+            break;
+    }
+
+    //f_log(tagName + '.' + type + ': ' + JSON.stringify(_SELECT_OBJ));
+
+    if (_SELECT_OBJ != null) {
+        if (_SELECT_OBJ.cached == true) {
+            f_displayTranslateCache(_SELECT_OBJ);
+            _SELECT_OBJ = null;
+        } else {
+            if (_SELECT_OBJ.text && _SELECT_OBJ.text.length > 0) {
+                f_english_Translate();
+                _SELECT_OBJ = null;
+            }
+        }
+    }
+
+    //f_log(tagName + '.' + type + ': ' + id + ' \r\nSELECT= ' + textSelect + ' \r\nTEXT= ', text);
+    //event.preventDefault();
+    //event.stopPropagation();
+}
+
+if (window.addEventListener) {
+    window.addEventListener("mouseup", f_event_processCenter, true);
+    window.addEventListener("mousedown", f_event_processCenter, true);
+    window.addEventListener("click", f_event_processCenter, true);
+    window.addEventListener("dblclick", f_event_processCenter, true);
+}
