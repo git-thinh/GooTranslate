@@ -18,7 +18,7 @@ https://vi-vn.facebook.com/notes/tieng-anh-123/m%E1%BB%99t-v%C3%A0i-c%E1%BA%A5u-
 
 https://www.thefreedictionary.com/notification
 
-
+http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3
 
 
 ////////https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3

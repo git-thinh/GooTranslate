@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace browser
 {
@@ -14,17 +15,26 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
-        public void speechSentence(string text, int repeat)
+        public void playMp3FromUrl(String url, Int32 repeat)
+        {
+            //_app.playMp3FromUrl("https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3");
+            //_app.playMp3FromUrl(url, repeat);
+            var playThread = new Thread(timeout => _app.playMp3FromUrl("http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3", (int)timeout));
+            playThread.IsBackground = true;
+            playThread.Start(10000);
+        }
+
+        public void speechSentence(String text, Int32 repeat)
         {
             _app.speechSentence(text, repeat);
         }
 
-        public void speechWords(string text, int repeat)
+        public void speechWords(String text, Int32 repeat)
         {
             _app.speechWords(text, repeat);
         }
 
-        public void speechWord(string text, int repeat)
+        public void speechWord(String text, Int32 repeat)
         {
             _app.speechWord(text, repeat);
         }

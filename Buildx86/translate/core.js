@@ -161,12 +161,17 @@ function f_english_Translate() {
         var text = otran.text.toLowerCase().trim();
 
         //___API.speechWord(text, 1);
+        //___API.playMp3FromUrl('https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3', 1);
+        ___API.playMp3FromUrl('http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3', 1);
 
-        //var audio = document.createElement('iframe');
-        //audio.src = 'https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3';
-        //audio.style.display = 'none';
+        //var audio = document.createElement('embed');
+        ////audio.style.display = 'none';
         //audio.id = 'iframeAudio';
-        //audio.setAttribute('allow', 'autoplay');
+        //audio.width = '100px';
+        //audio.height = '100px';
+        //audio.autostart = 'true';
+        //audio.autoplay = 'true';
+        //audio.setAttribute('src', 'https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3');
         ////audio.play();
         //document.body.appendChild(audio);
 

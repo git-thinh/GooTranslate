@@ -17,6 +17,10 @@ namespace browser
         void fetchHttp(string url);
         void fetchHttps(string url);
 
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+        void playMp3FromUrl(string url, int repeat);
+
         void speechSentence(string text, int repeat);
         void speechWords(string text, int repeat);
         void speechWord(string text, int repeat);
