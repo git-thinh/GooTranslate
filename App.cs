@@ -11,7 +11,6 @@ using Fleck2.Interfaces;
 using System.Speech.Synthesis;
 using System.Net.Sockets;
 using Fleck2;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using NAudio.Wave;
@@ -21,6 +20,38 @@ namespace browser
 {
     class App : IApp
     {
+        #region [ APP ]
+
+        private static fMain _formMain;
+        private static IApp _app;
+
+        private static oApp _objApp = null;
+        public oApp appInfo { get { return _objApp; } }
+
+        static App()
+        {
+            _objApp = new oApp();
+            try
+            {
+                if (File.Exists("app.json")) _objApp = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
+            }
+            catch { }
+
+            if (_objApp.storePaths != null && _objApp.storePaths.Length > 0)
+            {
+                for (int i = 0; i < _objApp.storePaths.Length; i++)
+                {
+                    if (File.Exists(_objApp.storePaths[i]))
+                    {
+                        _objApp.storePathCurrent = _objApp.storePaths[i];
+                        break;
+                    }
+                }
+            }
+        }
+                
+        #endregion
+
         #region [ WEB_SOCKET ]
 
         private static int _socketPort = 0;
@@ -347,35 +378,7 @@ namespace browser
         }
 
         #endregion
-
-        private static fMain _formMain;
-        private static IApp _app;
-
-        private static oApp _objApp = null;
-        public oApp appInfo { get { return _objApp; } }
-
-        static App()
-        {
-            _objApp = new oApp();
-            try
-            {
-                if (File.Exists("app.json")) _objApp = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
-            }
-            catch { }
-
-            if (_objApp.storePaths != null && _objApp.storePaths.Length > 0)
-            {
-                for (int i = 0; i < _objApp.storePaths.Length; i++)
-                {
-                    if (File.Exists(_objApp.storePaths[i]))
-                    {
-                        _objApp.storePathCurrent = _objApp.storePaths[i];
-                        break;
-                    }
-                }
-            }
-        }
-
+        
         #region [ WEB VIEW MAIN ]
 
         public void webViewMain_Load(string url) { if (_formMain != null) _formMain.webViewMain_Load(url); }
@@ -384,6 +387,10 @@ namespace browser
         public void webViewMain_Stop() { if (_formMain != null) _formMain.webViewMain_Stop(); }
 
         #endregion
+
+        #region [ CRAWLER ]
+
+        static ConcurrentDictionary<string, string> _dicHtml = new ConcurrentDictionary<string, string>() { };
 
         public void f_link_getHtmlOnline(string url)
         {
@@ -472,12 +479,7 @@ namespace browser
             //////////process.BeginErrorReadLine();
             //////////process.WaitForExit(); 
         }
-
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
-
-        static ConcurrentDictionary<string, string> _dicHtml = new ConcurrentDictionary<string, string>() { };
-
+         
         public string fetchResponse(string url)
         {
             if (_dicHtml.ContainsKey(url)) return _dicHtml[url];
@@ -575,6 +577,8 @@ namespace browser
                 //Console.WriteLine(ex);
             }
         }
+
+        #endregion
 
         #region [ MSG_QUEUE ]
 
@@ -682,14 +686,8 @@ namespace browser
             File.WriteAllText("app.json", jsonApp);
             Thread.Sleep(1000);
         }
-
-        private static void PlayMp3FromUrl(object p, int timeout)
-        {
-            throw new NotImplementedException();
-        }
-
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
+        
+        #region [ LOG ]
 
         private static StringBuilder _log = new StringBuilder(string.Empty);
         public void writeLog(string text)
@@ -698,5 +696,6 @@ namespace browser
             _log.Append(Environment.NewLine);
         }
 
+        #endregion
     }
 }

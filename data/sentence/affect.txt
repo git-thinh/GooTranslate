@@ -1,3 +1,0 @@
-- affect
-
-- Your preferred language for Google products. Your language variant may affect the spelling or vocabulary used by some of them.

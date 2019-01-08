@@ -3,14 +3,14 @@
     "G:\\GoogleDrive"
   ],
   "storePathCurrent": "",
-  "socketPort": 49358,
+  "socketPort": 50053,
   "alwayOnTop": false,
   "hasWriteLog": true,
   "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",
   "Width": 600,
   "Height": 480,
-  "Top": 600,
-  "Left": 0,
+  "Top": 167,
+  "Left": 1187,
   "coreJs": {
     "Scheme": "https",
     "Host": "www.google-analytics.com",

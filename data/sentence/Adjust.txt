@@ -1,3 +1,0 @@
-- Adjust
-
-- Adjust account settings, like payment methods, languages, & storage options.

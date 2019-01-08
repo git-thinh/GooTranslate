@@ -314,10 +314,10 @@ namespace browser
             this.Shown += (se, ev) =>
             {
                 this.Width = this._app.appInfo.Width;
-                this.Height = this._app.appInfo.Height;// Screen.PrimaryScreen.WorkingArea.Height - 27;
+                this.Height = this._app.appInfo.Height; // Screen.PrimaryScreen.WorkingArea.Height - 27;
                 if (_app.appInfo.Top == 0) _app.appInfo.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
                 this.Top = _app.appInfo.Top;
-                this.Left = _app.appInfo.Left;// Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+                this.Left = _app.appInfo.Left; // Screen.PrimaryScreen.WorkingArea.Width - this.Width;
                 this.TopMost = _app.appInfo.alwayOnTop;
 
                 //ui_close.Location = new Point(this.Width - _SIZE_BOX, 0);
