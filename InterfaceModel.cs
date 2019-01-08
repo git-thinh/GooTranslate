@@ -6,6 +6,8 @@ namespace browser
 {
     public interface IApp
     {
+        int socketPort { get; }
+
         oApp appInfo { get; }
         void writeLog(string text);
 

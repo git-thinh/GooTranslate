@@ -11,15 +11,33 @@ using CefSharp.WinForms;
 using System.Threading;
 using System.Net;
 using SeasideResearch.LibCurlNet;
+using Fleck2.Interfaces;
+using System.Speech.Synthesis;
+using System.Net.Sockets;
+using Fleck2;
 
 namespace browser
 {
     class App : IApp
     {
+        private static IWebSocketConnection _socketCurrent = null;
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+        
+        private static SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer();
+        private static int _socketPort = 0;
+        public int socketPort { get { return _socketPort; } }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
         private static fMain _formMain;
         private static IApp _app;
+        
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
+
         private static oApp _objApp = null;
         public oApp appInfo { get { return _objApp; } }
         static App()
@@ -130,15 +148,87 @@ namespace browser
         [STAThread]
         static void Main(string[] args)
         {
-            test_curl_https();
-
             if (!CEF.Initialize(new Settings())) return;
-
+            //----------------------------------------------------------------------
             ThreadPool.SetMaxThreads(25, 25);
             ServicePointManager.DefaultConnectionLimit = 1000;
-
+            //----------------------------------------------------------------------
             _app = new App();
+            //======================================================================
+            // WEB_SOCKET
+            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+            l.Start();
+            _socketPort = ((IPEndPoint)l.LocalEndpoint).Port;
+            l.Stop();
 
+            //FleckLog.Level = LogLevel.Debug;
+            FleckLog.Level = LogLevel.None;
+            var server = new WebSocketServer("ws://localhost:" + _socketPort.ToString());
+            server.Start(socket =>
+            {
+                socket.OnMessage = message =>
+                {
+                    Console.WriteLine(message);
+                    if (message.Length > 0)
+                    {
+                        ////switch (message[0])
+                        ////{
+                        ////    case '#':
+                        ////        try
+                        ////        {
+                        ////            message = message.Substring(1).Trim();
+                        ////            _speakWords = message.ToLower().Split(' ').Where(x => !EL._WORD_SKIP_WHEN_READING.Any(w => w == x)).ToArray();
+                        ////            speechSynthesizer.Speak(_speakWords[_speakCounter]);
+                        ////        }
+                        ////        catch (Exception ex)
+                        ////        {
+                        ////            Console.WriteLine(ex.Message);
+                        ////        }
+                        ////        break;
+                        ////    case '!':
+                        ////        // Cancel the SpeakAsync operation and wait one second.
+                        ////        speechSynthesizer.SpeakAsyncCancelAll();
+                        ////        break;
+                        ////    default:
+                        ////        long id = msgProcess.Push(socket.ConnectionInfo.Id.ToString(), message);
+                        ////        //socket.Send(id.ToString());
+                        ////        break;
+                        ////}
+                    }
+                };
+                socket.OnOpen = () =>
+                {
+                    _socketCurrent = socket;
+                    //Thread thread = new Thread(new ParameterizedThreadStart(DoMethod));
+                    //thread.Start(socket); 
+                    //msgProcess.Join(socket); 
+                    //Thread thread = new Thread(new ParameterizedThreadStart(DoMethod));
+                    //thread.Start(socket);                    
+                    //socket.Send("ID=" + socket.ConnectionInfo.Id.ToString());
+                };
+                socket.OnClose = () =>
+                {
+                    //Console.WriteLine("Close!");
+                    //allSockets.Remove(socket);
+                };
+            });
+
+            //======================================================================
+            // SPEECH_MP3
+            // Configure the audio output. 
+            speechSynthesizer.SetOutputToDefaultAudioDevice();
+            // Subscribe to the StateChanged event.
+            speechSynthesizer.StateChanged += new EventHandler<StateChangedEventArgs>(synth_StateChanged);
+            // Subscribe to the SpeakProgress event.
+            speechSynthesizer.SpeakProgress += new EventHandler<SpeakProgressEventArgs>(synth_SpeakProgress);
+            // Subscribe to the SpeakCompleted event.
+            speechSynthesizer.SpeakCompleted += new EventHandler<SpeakCompletedEventArgs>(synth_SpeakCompleted);
+
+            //======================================================================
+            //test_curl_https();
+
+            //======================================================================
+            // CHROMIUM
             if (_app.appInfo.coreJs != null) CEF.RegisterScheme(_app.appInfo.coreJs.Scheme, _app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(_app));
             CEF.RegisterJsObject("___API", new ApiJavascript(_app));
 
@@ -146,12 +236,29 @@ namespace browser
             Application.Run(_formMain);
             CEF.Shutdown();
 
+            //======================================================================
+            // LOG - WRITE DATA
             string log = _log.ToString();
             if (_app.appInfo.hasWriteLog) File.WriteAllText("log.txt", log);
 
             string jsonApp = JsonConvert.SerializeObject(_app.appInfo, Formatting.Indented);
             File.WriteAllText("app.json", jsonApp);
             Thread.Sleep(1000);
+        }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
+        private static void synth_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
+        {
+        }
+
+        private static void synth_SpeakProgress(object sender, SpeakProgressEventArgs e)
+        {
+        }
+
+        private static void synth_StateChanged(object sender, StateChangedEventArgs e)
+        {
         }
 
         /*/////////////////////////////////////////////////////////////*/
@@ -178,9 +285,9 @@ namespace browser
                 easy.Dispose();
                 Curl.GlobalCleanup();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
         }
 
@@ -218,9 +325,9 @@ namespace browser
                 Curl.GlobalCleanup();
                 Console.WriteLine("Enter to exit ...");
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
         }
 
