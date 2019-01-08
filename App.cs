@@ -380,7 +380,7 @@ namespace browser
 
         #endregion
 
-        #region [ WEB VIEW MAIN ]
+        #region [ WEB_VIEW_MAIN ]
 
         public void webViewMain_Load(string url) { if (_formMain != null) _formMain.webViewMain_Load(url); }
         public void webViewMain_Reload() { if (_formMain != null) _formMain.webViewMain_Reload(); }
