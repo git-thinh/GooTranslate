@@ -65,17 +65,17 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
-        public void f_api_devtool(String menu)
+        public void appOpenDevtool(String menu)
         {
             _app.webViewMain_ShowDevTools();
         }
 
-        public void f_main_openUrl(String url, String title)
+        public void appOpenUrl(String url, String title)
         {
             _app.webViewMain_Load(url);
         }
 
-        public void f_api_reload(String menu)
+        public void appReload()
         {
             _app.webViewMain_Reload();
         }
@@ -83,13 +83,43 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
-        public string readFile(String file)
+        public Boolean dirCreate(String path)
+        {
+            if (string.IsNullOrEmpty(path)) return false;
+
+            try
+            {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                    return true;
+                }
+            }
+            catch { }
+            return false;
+        }
+
+        public Boolean dirExist(String path)
+        {
+            if (string.IsNullOrEmpty(path)) return false;
+
+            try
+            {
+                return Directory.Exists(path);
+            }
+            catch { }
+            return false;
+        }
+
+        //========================================================================
+
+        public String fileRead(String file)
         {
             if (File.Exists(file)) return File.ReadAllText(file);
             return JsonConvert.SerializeObject(new { Ok = false, Message = "Cannot find the file: " + file });
         }
-
-        public Boolean writeFile(String file, String data)
+                
+        public Boolean fileWrite(String file, String data)
         {
             if (string.IsNullOrEmpty(file)) return false;
             string fi = file;
@@ -107,7 +137,7 @@ namespace browser
             return false;
         }
 
-        public Boolean existFile(String file)
+        public Boolean fileExist(String file)
         {
             if (string.IsNullOrEmpty(file)) return false;
             string fi = file;

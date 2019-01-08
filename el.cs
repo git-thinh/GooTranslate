@@ -3,6 +3,14 @@ using System.Linq;
 
 namespace browser
 {
+    public class oDictionary
+    {
+        public string Name { set; get; }
+        public string Phonics { set; get; }
+        public string Mean { set; get; }
+    }
+
+
     public class EL
     {
         public static readonly string[] _WORD_SKIP_WHEN_READING = { "is", "are", "was", "were", "the", "to", "and", "of" };

@@ -3,9 +3,20 @@ var f_log = 1 ? console.log.bind(console, '') : function () { };
 /*==============================================================
 / DATA - BROADCAST
 /=============================================================*/
+var ___sendBroadcastData = function (key) {
+    ___COMS_ID.forEach(function (comId) {
+        var el = document.getElementById(comId);
+        if (el && el.__vue__) {
+            el.__vue__.$emit(key, ___DATA[key]);
+        }
+    });
+};
 var ___registerDataBroadcast = function (v) {
+    if (window['___' + v] != null) return;
+
     console.log('[0] ___DATA.' + v + ' -> Register ');
-    if (window['___' + v] == null) window['___' + v] = {};
+    window['___' + v] = {};
+
     Object.defineProperty(___DATA, v, {
         get: function () {
             //console.log('[0] ___DATA.' + v + '.Get()');
@@ -22,15 +33,15 @@ var ___registerDataBroadcast = function (v) {
     });
 }
 var ___DATA = {};
-var ___DATA_SHARED = ['objCore', 'objScreens', 'screenInfo'];
+var ___DATA_SHARED = ['appInfo'];
 var ___DATA_BROADCAST = [];
 ___DATA_SHARED.forEach(function (v) { ___registerDataBroadcast(v); });
 //////___DATA = { objCore: {}, objScreens: {}, objLibs: { Scheme: '', Host: '', fileName: '', appendFiles: [] } };
-___DATA.objLibs = JSON_LIBS___;
+___DATA.appInfo = JSON_APP_INFO___;
 console.info('___DATA = ', JSON.stringify(___DATA));
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-var ___CORE, ___SCREENS, ___CORE_INTERFACE_MIXIN;
+var ___COMS_ID = [], ___CORE, ___SCREENS, ___CORE_INTERFACE_MIXIN;
 ___CORE_INTERFACE_MIXIN = { methods: {} };
 function ___screenOpen(screenInfo) {
     if (screenInfo == null || screenInfo.Id == null) {
@@ -317,11 +328,16 @@ function ___screenOpen(screenInfo) {
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
+    screenInfo.bodyVue = {};
+    var _screenId = screenInfo;//.Id.split('-').join('_');
+    //___registerDataBroadcast(_screenId);
+    ___DATA[_screenId] = screenInfo;
 
-    ___DATA.objScreens[screenInfo.Id] = screenInfo;
     var frameImpl = new vueScreenExtend({ data: ___DATA });
     var frameVue = frameImpl.$mount(div);
-    ___DATA.objScreens[screenInfo.Id].bodyVue = frameVue;
+
+    ___DATA[_screenId].bodyVue = frameVue;
+
     frameVue.open();
 }
 ///////////////////////////////////////////////////////////////////
@@ -329,19 +345,24 @@ function ___screenOpen(screenInfo) {
 function ___onDomReady() {
     console.info('DOM loaded');
     //-----------------------------------------------------------------
-    var head = document.getElementsByTagName('head')[0], elemLib;
-    for (var i = 0; i < ___DATA.objLibs.appendFiles.length; i++) {
-        var url = ___DATA.objLibs.appendFiles[i];
-        if (url.indexOf('http') != 0) url = ___DATA.objLibs.Scheme + '://' + ___DATA.objLibs.Host + '/' + url;
+    var head = document.getElementsByTagName('head')[0],
+        elemLib,
+        coreJs = ___DATA.appInfo.coreJs,
+        appendFiles = coreJs.appendFiles;
+    for (var i = 0; i < appendFiles.length; i++) {
+        var url = appendFiles[i];
+        if (url.indexOf('http') != 0) url = coreJs.Scheme + '://' + coreJs.Host + '/' + url;
+
         console.log(' +++++ URL [' + i + '] ', url);
-        if (___DATA.objLibs.appendFiles[i].indexOf('.css') != -1) {
+
+        if (appendFiles[i].indexOf('.css') != -1) {
             elemLib = document.createElement('link');
             elemLib.rel = 'stylesheet';
             elemLib.type = 'text/css';
             elemLib.href = url;
             elemLib.media = 'all';
         } else {
-            if (___DATA.objLibs.appendFiles[i] == 'jquery.min.js') {
+            if (appendFiles[i] == 'jquery.min.js') {
                 if (window.jQuery != null) {
                     console.log(' ----- URL [' + i + '] ', url);
                     continue;
@@ -355,4 +376,5 @@ function ___onDomReady() {
     //-----------------------------------------------------------------
     setTimeout(function () { ___CORE.setup(); }, 350);
 }
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ___onDomReady); else ___onDomReady();
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ___onDomReady); else ___onDomReady(); 
+ 

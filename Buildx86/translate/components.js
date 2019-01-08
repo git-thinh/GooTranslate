@@ -5,7 +5,7 @@
         data: {
             _eleID: null
         },
-        mounted: function () {
+        ready: function () {
             var _id = this.$el.id;
             if (_id == null || _id.length == 0) {
                 _id = '___vue-com-' + this._uid;
@@ -14,6 +14,7 @@
                 }
             }
             this._eleID = _id;
+            ___COMS_ID.push(_id);
         },
         props: ___DATA_SHARED,
         computed: {
@@ -227,6 +228,9 @@ Vue.component('com-nav-bottom', {
 
         this.f_base_show();
         //_LOADING.f_hide();
+        this.$on(___DATA_BROADCAST.Dictionary, function (data) {
+            console.log('??????????? com-nav-bottom = ', data.length);
+        });
     },
     methods: {
         f_toolbar_init: function () {

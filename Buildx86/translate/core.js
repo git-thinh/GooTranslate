@@ -1,9 +1,8 @@
 /*============================================================
 / DATA: CONTRACTOR - CREATE EVENT DATA CHANGE
 /============================================================*/
-___DATA_BROADCAST = ['Dictionary'];
-___DATA_BROADCAST.forEach(function (v) { ___registerDataBroadcast(v); });
-
+___DATA_BROADCAST = { Dictionary: 'dic' };
+for (var v in ___DATA_BROADCAST) ___registerDataBroadcast(___DATA_BROADCAST[v]);
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 ___SCREENS = {
@@ -65,7 +64,7 @@ CoreInterface.prototype = {
             //Boolean f_api_writeFile(String file, String data)
             //___API.f_api_writeFile();
             _self._hasChangeData = false;
-            f_log('AUTO_SAVE: ', ___DATA.Dictionary);
+            f_log('AUTO_SAVE: ', ___DATA[___DATA_BROADCAST.Dictionary]);
         }
     },
     //========================================================================
@@ -74,10 +73,11 @@ CoreInterface.prototype = {
         var _self = this;
         if (text == null || mean == null || text.length == 0 || mean.length == 0) return false;
         text = text.toLowerCase().trim();
-        if (___DATA.Dictionary[text] == null) {
-            ___DATA.Dictionary[text] = mean;
+        if (___DATA[___DATA_BROADCAST.Dictionary][text] == null) {
+            ___DATA[___DATA_BROADCAST.Dictionary][text] = mean;
             _self._hasChangeData = true;
             f_log('DICTIONARY_ADD: ', text);
+            ___sendBroadcastData(___DATA_BROADCAST.Dictionary);
             return true;
         }
         return false;
@@ -162,7 +162,7 @@ function f_english_Translate() {
 
         //___API.speechWord(text, 1);
         //___API.playMp3FromUrl('https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3', 1);
-        ___API.playMp3FromUrl('http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3', 1);
+        //___API.playMp3FromUrl('http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3', 1);
 
         //var audio = document.createElement('embed');
         ////audio.style.display = 'none';

@@ -11,6 +11,9 @@ namespace browser
         void socketSendMessage(string message);
         void socketPushMessage(string message);
 
+        bool dicWordPhraseAdd(string name, string phonics, string mean);
+        bool dicSentenceAdd(string text);
+
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 

@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using NAudio.Wave;
 using core2.MMF;
+using System.Collections.Generic;
 
 namespace browser
 {
@@ -49,7 +50,7 @@ namespace browser
                 }
             }
         }
-                
+
         #endregion
 
         #region [ WEB_SOCKET ]
@@ -63,7 +64,7 @@ namespace browser
 
         public void socketSendMessage(string message)
         {
-           if(_socketOpen) this.socketCurrent.Send(message);
+            if (_socketOpen) this.socketCurrent.Send(message);
         }
 
         #endregion
@@ -291,7 +292,7 @@ namespace browser
             MP3_PLAYING = false;
             socketPushMessage("#DONE:" + url);
         }
-        
+
         private Stream ms = new MemoryStream();
         public void playMp3FromUrl22(string url, int repeat)
         {
@@ -330,7 +331,7 @@ namespace browser
                 }
             }
         }
-        
+
         static ConcurrentDictionary<string, byte[]> _dicMp3 = new ConcurrentDictionary<string, byte[]>() { };
         bool playMp3FromUrl_waiting = false;
         AutoResetEvent playMp3FromUrl_stop = new AutoResetEvent(false);
@@ -378,7 +379,7 @@ namespace browser
         }
 
         #endregion
-        
+
         #region [ WEB VIEW MAIN ]
 
         public void webViewMain_Load(string url) { if (_formMain != null) _formMain.webViewMain_Load(url); }
@@ -479,7 +480,7 @@ namespace browser
             //////////process.BeginErrorReadLine();
             //////////process.WaitForExit(); 
         }
-         
+
         public string fetchResponse(string url)
         {
             if (_dicHtml.ContainsKey(url)) return _dicHtml[url];
@@ -585,6 +586,62 @@ namespace browser
         static ConcurrentQueue<string> _msgQueue = new ConcurrentQueue<string> { };
         public void socketPushMessage(string message) { if (!string.IsNullOrEmpty(message)) _msgQueue.Enqueue(message); }
 
+        static ConcurrentQueue<string> _mp3Queue = new ConcurrentQueue<string> { };
+
+        #endregion
+
+        #region [ DICTIONARY ]
+
+        static ConcurrentDictionary<string, string> _dicWordPhrase = new ConcurrentDictionary<string, string>() { };
+        static ConcurrentDictionary<int, string> _dicSentence = new ConcurrentDictionary<int, string>() { };
+        static ConcurrentDictionary<string, List<int>> _dicWordSentence = new ConcurrentDictionary<string, List<int>>() { };
+
+        public bool dicWordPhraseAdd(string name, string phonics, string mean)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(mean)) return false;
+            name = name.ToLower().Trim();
+            mean = mean.ToLower().Trim();
+
+            if (_dicWordPhrase.ContainsKey(name) == false)
+            {
+                string file = Path.Combine(_objApp.storePathCurrent, "word.txt");
+                string line = string.Format("{0};{1};{2}", name, phonics, mean);
+                if (string.IsNullOrEmpty(phonics))
+                {
+                    phonics = string.Empty;
+                    file = Path.Combine(_objApp.storePathCurrent, "phrase.txt");
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(phonics)) return false;
+
+                    line = string.Format("{0};{1}", name, mean);
+                    phonics = phonics.ToLower().Trim();
+                    _mp3Queue.Enqueue(name);
+                }
+
+                _dicWordPhrase.TryAdd(name, line);
+                using (StreamWriter sw = File.AppendText(file))
+                    sw.WriteLine(line);
+                return true;
+            }
+            return false;
+        }
+
+        public bool dicSentenceAdd(string text)
+        {
+            string file = Path.Combine(_objApp.storePathCurrent, "sentence.txt");
+            bool notExist = _dicSentence.Where(kv => kv.Value == text).Count() == 0;
+            if (notExist)
+            {
+                _dicSentence.TryAdd(_dicSentence.Count, text);
+                using (StreamWriter sw = File.AppendText(file))
+                    sw.WriteLine(text);
+                return true;
+            }
+            return false;
+        }
+
         #endregion
 
         [STAThread]
@@ -598,7 +655,8 @@ namespace browser
             _app = new App();
             //----------------------------------------------------------------------
             System.Timers.Timer aTimer = new System.Timers.Timer(300);
-            aTimer.Elapsed += (se, ev) => {
+            aTimer.Elapsed += (se, ev) =>
+            {
                 if (_msgQueue.Count > 0)
                 {
                     string msg;
@@ -686,7 +744,7 @@ namespace browser
             File.WriteAllText("app.json", jsonApp);
             Thread.Sleep(1000);
         }
-        
+
         #region [ LOG ]
 
         private static StringBuilder _log = new StringBuilder(string.Empty);

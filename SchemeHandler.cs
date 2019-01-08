@@ -34,8 +34,8 @@ namespace browser
 
         Stream GenerateStreamFromString(string[] files)
         {
-            string JSON_LIBS___ = "";
-            if (_app.appInfo.coreJs != null) JSON_LIBS___ = JsonConvert.SerializeObject(_app.appInfo.coreJs);
+            string JSON_APP_INFO___ = "";
+            if (_app.appInfo != null) JSON_APP_INFO___ = JsonConvert.SerializeObject(_app.appInfo);
 
             StringBuilder bi = new StringBuilder(string.Empty);
             foreach (string fi in files)
@@ -43,7 +43,7 @@ namespace browser
                 if (File.Exists(fi))
                 {
                     string temp = File.ReadAllText(fi);
-                    if (JSON_LIBS___.Length > 0) temp = temp.Replace("JSON_LIBS___", JSON_LIBS___);
+                    if (JSON_APP_INFO___.Length > 0) temp = temp.Replace("JSON_APP_INFO___", JSON_APP_INFO___);
 
                     bi.Append(temp);
                     bi.Append(Environment.NewLine);
