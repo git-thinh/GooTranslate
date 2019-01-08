@@ -160,7 +160,19 @@ function f_english_Translate() {
         f_log('TRANSLATE ', otran);
         var text = otran.text.toLowerCase().trim();
 
-        ___API.speechWord(text, 1);
+        //___API.speechWord(text, 1);
+
+        //var audio = document.createElement('iframe');
+        //audio.src = 'https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3';
+        //audio.style.display = 'none';
+        //audio.id = 'iframeAudio';
+        //audio.setAttribute('allow', 'autoplay');
+        ////audio.play();
+        //document.body.appendChild(audio);
+
+        // <iframe src="audio/source.mp3" allow="autoplay" style="display:none" id="iframeAudio"></iframe> 
+        // <audio autoplay loop  id="playAudio"><source src="audio/source.mp3"></audio>
+        // 
 
         ////if (_.some(_words, function (w) { return w == text; }) == false) _words.push(text);
 
