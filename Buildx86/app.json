@@ -1,4 +1,5 @@
 {
+  "socketPort": 59272,
   "alwayOnTop": false,
   "hasWriteLog": true,
   "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",

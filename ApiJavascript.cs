@@ -11,6 +11,45 @@ namespace browser
         readonly IApp _app;
         public ApiJavascript(IApp app) { this._app = app; }
 
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
+        public void speechSentence(string text, int repeat)
+        {
+            _app.speechSentence(text, repeat);
+        }
+
+        public void speechWords(string text, int repeat)
+        {
+            _app.speechWords(text, repeat);
+        }
+
+        public void speechWord(string text, int repeat)
+        {
+            _app.speechWord(text, repeat);
+        }
+
+        public void speechCancel()
+        {
+            _app.speechCancel();
+        }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
+        public void fetchHttp(String url)
+        {
+            _app.fetchHttp(url);
+        }
+
+        public void fetchHttps(String url)
+        {
+            _app.fetchHttps(url);
+        }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
         public void f_api_devtool(String menu)
         {
             _app.webViewMain_ShowDevTools();
@@ -26,13 +65,16 @@ namespace browser
             _app.webViewMain_Reload();
         }
 
-        public string f_api_readFile(String file)
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
+        public string readFile(String file)
         {
             if (File.Exists(file)) return File.ReadAllText(file);
             return JsonConvert.SerializeObject(new { Ok = false, Message = "Cannot find the file: " + file });
         }
 
-        public Boolean f_api_writeFile(String file, String data)
+        public Boolean writeFile(String file, String data)
         {
             if (string.IsNullOrEmpty(file)) return false;
             string fi = file;
@@ -50,7 +92,7 @@ namespace browser
             return false;
         }
 
-        public Boolean f_api_existFile(String file)
+        public Boolean existFile(String file)
         {
             if (string.IsNullOrEmpty(file)) return false;
             string fi = file;

@@ -160,6 +160,8 @@ function f_english_Translate() {
         f_log('TRANSLATE ', otran);
         var text = otran.text.toLowerCase().trim();
 
+        ___API.speechWord(text, 1);
+
         ////if (_.some(_words, function (w) { return w == text; }) == false) _words.push(text);
 
         ////f_post('//api/translate/v1', otran.text, function (_res) {

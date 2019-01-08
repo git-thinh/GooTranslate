@@ -7,9 +7,27 @@ namespace browser
     public interface IApp
     {
         int socketPort { get; }
+        Fleck2.Interfaces.IWebSocketConnection socketCurrent { get; }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
+        void fetchHttp(string url);
+        void fetchHttps(string url);
+
+        void speechSentence(string text, int repeat);
+        void speechWords(string text, int repeat);
+        void speechWord(string text, int repeat);
+        void speechCancel();
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
 
         oApp appInfo { get; }
         void writeLog(string text);
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
 
         void webViewMain_Load(string url);
         void webViewMain_Reload();
@@ -27,6 +45,8 @@ namespace browser
 
     public class oApp
     {
+        public int socketPort { get; set; }
+
         public bool alwayOnTop { set; get; }
         public bool hasWriteLog { set; get; }
         public string Url { set; get; }
@@ -74,6 +94,4 @@ namespace browser
             //===========================================================================================================
         }
     }
-
-
 }

@@ -86,6 +86,11 @@
       <HintPath>dll\System.Speech.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\System.Threading.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -94,6 +99,7 @@
     <Compile Include="ControlTransparent.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EL.cs" />
     <Compile Include="Fleck2\FleckExtensions.cs" />
     <Compile Include="Fleck2\FleckLog.cs" />
     <Compile Include="Fleck2\FrameType.cs" />
@@ -122,6 +128,9 @@
     <Compile Include="Fleck2\WebSocketHttpRequest.cs" />
     <Compile Include="Fleck2\WebSocketServer.cs" />
     <Compile Include="Fleck2\WebSocketStatusCodes.cs" />
+    <Compile Include="fMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Gma.System.MouseKeyHook\Combination.cs" />
     <Compile Include="Gma.System.MouseKeyHook\Hook.cs" />
     <Compile Include="Gma.System.MouseKeyHook\HotKeys\HotKeyArgs.cs" />

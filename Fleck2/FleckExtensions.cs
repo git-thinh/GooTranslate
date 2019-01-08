@@ -40,10 +40,10 @@ namespace Fleck2
         /// <typeparam name="T"></typeparam>
         /// <param name="enumerable"></param>
         /// <returns></returns>
-        public static T[] ToArray<T>(this IEnumerable<T> enumerable)
-        {
-            return ToList(enumerable).ToArray();
-        }
+        //////////////////////public static T[] ToArray<T>(this IEnumerable<T> enumerable)
+        //////////////////////{
+        //////////////////////    return ToList(enumerable).ToArray();
+        //////////////////////}
         /// <summary>
         /// Convert enumerable to list.
         /// </summary>
