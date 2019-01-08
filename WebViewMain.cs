@@ -88,7 +88,7 @@ namespace browser
         public bool OnBeforeBrowse(IWebBrowser browser, IRequest request, NavigationType naigationvType, bool isRedirect) { return false; }
         /*///////////////////////////////////////////////////////////////////////////////////////////////////*/
         /*///////////////////////////////////////////////////////////////////////////////////////////////////*/
-        public void Load(string url) { if (_webView != null) _webView.Load(url); }
+        public void LoadUrl(string url) { if (_webView != null) _webView.Load(url); }
         public void Reload() { if (_webView != null) _webView.Reload(); }
         public void ShowDevTools() { if (_webView != null) _webView.ShowDevTools(); }
         public void Stop() { if (_webView != null) _webView.Stop(); }

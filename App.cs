@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using CefSharp.WinForms;
 using System.Threading;
 using System.Net;
+using SeasideResearch.LibCurlNet;
 
 namespace browser
 {
@@ -21,7 +22,8 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         private static oApp _objApp = null;
         public oApp appInfo { get { return _objApp; } }
-        static App() {
+        static App()
+        {
             _objApp = new oApp();
             try
             {
@@ -128,6 +130,8 @@ namespace browser
         [STAThread]
         static void Main(string[] args)
         {
+            test_curl_https();
+
             if (!CEF.Initialize(new Settings())) return;
 
             ThreadPool.SetMaxThreads(25, 25);
@@ -135,7 +139,7 @@ namespace browser
 
             _app = new App();
 
-            if(_app.appInfo.coreJs != null) CEF.RegisterScheme(_app.appInfo.coreJs.Scheme, _app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(_app));
+            if (_app.appInfo.coreJs != null) CEF.RegisterScheme(_app.appInfo.coreJs.Scheme, _app.appInfo.coreJs.Host, true, new AppSchemeHandlerFactory(_app));
             CEF.RegisterJsObject("___API", new ApiJavascript(_app));
 
             _formMain = new fMain(_app);
@@ -153,7 +157,77 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
-        private static StringBuilder _log  = new StringBuilder(string.Empty);
+        static void test_curl_http()
+        {
+            try
+            {
+                Curl.GlobalInit((int)CURLinitFlag.CURL_GLOBAL_ALL);
+
+                Easy easy = new Easy();
+                Easy.WriteFunction wf = new Easy.WriteFunction((Byte[] buf, Int32 size, Int32 nmemb, Object extraData) =>
+                {
+                    string s = System.Text.Encoding.UTF8.GetString(buf);
+                    Console.Write(s);
+                    return size * nmemb;
+                });
+
+                easy.SetOpt(CURLoption.CURLOPT_URL, "http://google.com.vn");
+                easy.SetOpt(CURLoption.CURLOPT_WRITEFUNCTION, wf);
+                easy.Perform();
+                //easy.Cleanup();
+                easy.Dispose();
+                Curl.GlobalCleanup();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        static void test_curl_https()
+        {
+            try
+            {
+                StringBuilder bi = new StringBuilder(string.Empty);
+                Curl.GlobalInit((int)CURLinitFlag.CURL_GLOBAL_ALL);
+                Easy easy = new Easy();
+                Easy.WriteFunction wf = new Easy.WriteFunction((Byte[] buf, Int32 size, Int32 nmemb, Object extraData) =>
+                {
+                    string s = System.Text.Encoding.UTF8.GetString(buf).Trim();
+                    if (s.Length > 0)
+                    {
+                        bi.Append(s);
+                        if (s.Contains("</html>"))
+                        {
+                            string htm = bi.ToString();
+                        }
+                    }
+                    return size * nmemb;
+                });
+                easy.SetOpt(CURLoption.CURLOPT_WRITEFUNCTION, wf);
+
+                Easy.SSLContextFunction sf = new Easy.SSLContextFunction((SSLContext ctx, Object extraData) => { return CURLcode.CURLE_OK; });
+                easy.SetOpt(CURLoption.CURLOPT_SSL_CTX_FUNCTION, sf);
+
+                easy.SetOpt(CURLoption.CURLOPT_URL, "https://dictionary.cambridge.org/grammar/british-grammar/above-or-over");
+                easy.SetOpt(CURLoption.CURLOPT_CAINFO, "ca-bundle.crt");
+
+                easy.Perform();
+                //easy.Cleanup();
+                easy.Dispose();
+                Curl.GlobalCleanup();
+                Console.WriteLine("Enter to exit ...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        /*/////////////////////////////////////////////////////////////*/
+        /*/////////////////////////////////////////////////////////////*/
+
+        private static StringBuilder _log = new StringBuilder(string.Empty);
         public void writeLog(string text)
         {
             _log.Append(text);
@@ -423,7 +497,7 @@ namespace browser
 
             var ui_close = new Label()
             {
-                Location = new Point(0,0),
+                Location = new Point(0, 0),
                 Width = 9,
                 Height = 9,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -466,7 +540,7 @@ namespace browser
             {
                 this.Width = this._app.appInfo.Width;
                 this.Height = this._app.appInfo.Height;// Screen.PrimaryScreen.WorkingArea.Height - 27;
-                if(_app.appInfo.Top == 0) _app.appInfo.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+                if (_app.appInfo.Top == 0) _app.appInfo.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
                 this.Top = _app.appInfo.Top;
                 this.Left = _app.appInfo.Left;// Screen.PrimaryScreen.WorkingArea.Width - this.Width;
                 this.TopMost = _app.appInfo.alwayOnTop;
@@ -481,11 +555,12 @@ namespace browser
 
                 ui_resize.Location = new Point(this.Width - _SIZE_BOX, this.Height - _SIZE_BOX);
                 ui_resize.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-                                
+
                 ui_webMain.onReady(this);
                 ui_webMain.SendToBack();
             };
-            this.FormClosing += (se, ev) => {
+            this.FormClosing += (se, ev) =>
+            {
                 _app.appInfo.Width = this.Width;
                 _app.appInfo.Height = this.Height;
                 _app.appInfo.Top = this.Top;
@@ -510,7 +585,7 @@ namespace browser
                     if (Uri.TryCreate(url, UriKind.Absolute, out u))
                     {
                         this.ui_webMain.Stop();
-                        this.ui_webMain.Load(url);
+                        this.ui_webMain.LoadUrl(url);
                     }
                     break;
                 case "Width = 480":
@@ -569,7 +644,7 @@ namespace browser
         /*////////////////////////////////////////////////////////////////////////*/
         /*////////////////////////////////////////////////////////////////////////*/
 
-        public void webViewMain_Load(string url) { if (ui_webMain != null) ui_webMain.Load(url); }
+        public void webViewMain_Load(string url) { if (ui_webMain != null) ui_webMain.LoadUrl(url); }
         public void webViewMain_Reload() { if (ui_webMain != null) ui_webMain.Reload(); }
         public void webViewMain_ShowDevTools() { if (ui_webMain != null) ui_webMain.ShowDevTools(); }
         public void webViewMain_Stop() { if (ui_webMain != null) ui_webMain.Stop(); }
