@@ -15,27 +15,29 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using NAudio.Wave;
-using System.Web;
-using System.Diagnostics;
 using core2.MMF;
 
 namespace browser
 {
     class App : IApp
     {
+        #region [ WEB_SOCKET ]
+
         private static int _socketPort = 0;
         public int socketPort { get { return _socketPort; } }
 
+        private static bool _socketOpen = false;
         private static IWebSocketConnection _socketCurrent = null;
         public IWebSocketConnection socketCurrent { get { return _socketCurrent; } }
 
-        private void socketSendMessage(string message)
+        public void socketSendMessage(string message)
         {
-            this.socketCurrent.Send(message);
+           if(_socketOpen) this.socketCurrent.Send(message);
         }
 
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
+        #endregion
+
+        #region [ SPEECH ]
 
         private static SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer();
         static string[] _speakWords = new string[] { };
@@ -137,71 +139,128 @@ namespace browser
             }
         }
 
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
-         
+        #endregion
 
-        public void playMp3FromUrl(string url, int repeat)
+        #region [ MP3 ]
+
+        public void downloadMp3(string url, int timeOutDownloadMp3 = 30000)
         {
-            //String url = "https:/api.twilioxxx.com/2010-04-01xxx/AccountSidxxxx/Residxxx.mp3";//Not real Path
-            string filename = Path.GetFileName(url);
-            if (!File.Exists(filename))
-            {
-                WebClient client = new WebClient();
-                byte[] data = client.DownloadData(new Uri(url));
-                int MAX_BYTES = data.Length;
-                MemoryMappedFile map = MemoryMappedFile.Create(filename, MapProtection.PageReadWrite, MAX_BYTES);
-                using (Stream view = map.MapView(MapAccess.FileMapWrite, 0, MAX_BYTES))
-                    view.Write(data, 0, MAX_BYTES);
-                map.Close();
-            }
-
-            using (var ms = File.OpenRead(filename))
-            using (var rdr = new Mp3FileReader(ms))
-            using (var wavStream = WaveFormatConversionStream.CreatePcmStream(rdr))
-            using (var baStream = new BlockAlignReductionStream(wavStream))
-            using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-            {
-                waveOut.Init(baStream);
-                waveOut.Play();
-                while (waveOut.PlaybackState == PlaybackState.Playing)
-                {
-                    Thread.Sleep(100);
-                }
-            }
-
-
-
-            //////////using (Stream ms = new MemoryStream())
-            //////////{
-            //////////    using (Stream stream = WebRequest.Create(url).GetResponse().GetResponseStream())
-            //////////    {
-            //////////        byte[] buffer = new byte[32768];
-            //////////        int read;
-            //////////        while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-            //////////        {
-            //////////            ms.Write(buffer, 0, read);
-            //////////        }
-            //////////    }
-
-
-            //////////    ms.Position = 0;
-            //////////    using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
-            //////////    {
-            //////////        using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-            //////////        {
-            //////////            waveOut.Init(blockAlignedStream);
-            //////////            waveOut.Play();
-            //////////            while (waveOut.PlaybackState == PlaybackState.Playing)
-            //////////            {
-            //////////                System.Threading.Thread.Sleep(100);
-            //////////            }
-            //////////        }
-            //////////    }
-            //////////}
-
-            //////socketSendMessage("#DONE:" + url);
         }
+
+        bool MP3_PLAYING = false;
+        AutoResetEvent MP3_TERMINAL = new AutoResetEvent(false);
+        public void playMp3FromUrl(string url, int repeat, bool isRunOnline = false, int timeOutDownloadMp3 = 30000)
+        {
+            if (MP3_PLAYING) return;
+            MP3_PLAYING = true;
+
+            //terminal
+            //if (MP3_TERMINAL) MP3_TERMINAL.Set();
+
+            if (isRunOnline)
+            {
+                #region [1] Play the online url mp3
+
+                using (Stream ms = new MemoryStream())
+                {
+                    try
+                    {
+                        using (Stream stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+                        {
+                            byte[] buffer = new byte[32768];
+                            int read;
+                            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                ms.Write(buffer, 0, read);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        socketPushMessage("#FAIL:" + url);
+                        // Cannot download the file mp3
+                        return;
+                    }
+
+                    ms.Position = 0;
+                    using (WaveStream baStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
+                    {
+                        using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                        {
+                            //waveOut.Init(baStream);
+                            //waveOut.Play();
+                            //while (waveOut.PlaybackState == PlaybackState.Playing)
+                            //{
+                            //    System.Threading.Thread.Sleep(100);
+                            //}
+
+                            waveOut.Init(baStream);
+                            waveOut.PlaybackStopped += (sender, e) =>
+                            {
+                                waveOut.Stop();
+                            };
+                            waveOut.Play();
+                        }
+                    }
+                }
+
+                #endregion
+            }
+            else
+            {
+                #region [2] Download and play the file mp3
+
+                //String url = "https:/api.twilioxxx.com/2010-04-01xxx/AccountSidxxxx/Residxxx.mp3";//Not real Path
+                string filename = Path.GetFileName(url);
+                if (!File.Exists(filename))
+                {
+                    byte[] data;
+                    try
+                    {
+                        WebClient client = new WebClient();
+                        data = client.DownloadData(new Uri(url));
+                        int MAX_BYTES = data.Length;
+                        MemoryMappedFile map = MemoryMappedFile.Create(filename, MapProtection.PageReadWrite, MAX_BYTES);
+                        using (Stream view = map.MapView(MapAccess.FileMapWrite, 0, MAX_BYTES))
+                            view.Write(data, 0, MAX_BYTES);
+                        map.Close();
+                    }
+                    catch
+                    {
+                        socketPushMessage("#FAIL:" + url);
+                        // Cannot download the file mp3
+                        return;
+                    }
+                }
+
+                using (var ms = File.OpenRead(filename))
+                using (var rdr = new Mp3FileReader(ms))
+                using (var wavStream = WaveFormatConversionStream.CreatePcmStream(rdr))
+                using (var baStream = new BlockAlignReductionStream(wavStream))
+                using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                {
+                    //waveOut.Init(baStream);
+                    //waveOut.Play();
+                    //while (waveOut.PlaybackState == PlaybackState.Playing)
+                    //{
+                    //    Thread.Sleep(100);
+                    //}
+
+                    waveOut.Init(baStream);
+                    waveOut.PlaybackStopped += (sender, e) =>
+                    {
+                        waveOut.Stop();
+                    };
+                    waveOut.Play();
+                }
+
+                #endregion
+            }
+
+            MP3_PLAYING = false;
+            socketPushMessage("#DONE:" + url);
+        }
+        
         private Stream ms = new MemoryStream();
         public void playMp3FromUrl22(string url, int repeat)
         {
@@ -240,17 +299,61 @@ namespace browser
                 }
             }
         }
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
+        
+        static ConcurrentDictionary<string, byte[]> _dicMp3 = new ConcurrentDictionary<string, byte[]>() { };
+        bool playMp3FromUrl_waiting = false;
+        AutoResetEvent playMp3FromUrl_stop = new AutoResetEvent(false);
+        public void playMp3FromUrl333(string url, int timeout)
+        {
+            if (playMp3FromUrl_waiting) return;
+
+            //terminal
+            //if (playMp3FromUrl_waiting) playMp3FromUrl_stop.Set();
+
+            Stream ms = null;
+            if (_dicMp3.ContainsKey(url))
+                ms = new MemoryStream(_dicMp3[url]);
+            else
+            {
+                ms = new MemoryStream();
+                using (Stream stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+                {
+                    byte[] buffer = new byte[32768];
+                    int read;
+                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ms.Write(buffer, 0, read);
+                    }
+                    _dicMp3.TryAdd(url, buffer);
+                }
+
+                ms.Position = 0;
+                using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
+                {
+                    using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                    {
+                        waveOut.Init(blockAlignedStream);
+                        waveOut.PlaybackStopped += (sender, e) =>
+                        {
+                            waveOut.Stop();
+                        };
+                        waveOut.Play();
+                        playMp3FromUrl_waiting = true;
+                        playMp3FromUrl_stop.WaitOne(timeout);
+                        playMp3FromUrl_waiting = false;
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         private static fMain _formMain;
         private static IApp _app;
 
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
-
         private static oApp _objApp = null;
         public oApp appInfo { get { return _objApp; } }
+
         static App()
         {
             _objApp = new oApp();
@@ -259,11 +362,28 @@ namespace browser
                 if (File.Exists("app.json")) _objApp = JsonConvert.DeserializeObject<oApp>(File.ReadAllText("app.json"));
             }
             catch { }
+
+            if (_objApp.storePaths != null && _objApp.storePaths.Length > 0)
+            {
+                for (int i = 0; i < _objApp.storePaths.Length; i++)
+                {
+                    if (File.Exists(_objApp.storePaths[i]))
+                    {
+                        _objApp.storePathCurrent = _objApp.storePaths[i];
+                        break;
+                    }
+                }
+            }
         }
+
+        #region [ WEB VIEW MAIN ]
+
         public void webViewMain_Load(string url) { if (_formMain != null) _formMain.webViewMain_Load(url); }
         public void webViewMain_Reload() { if (_formMain != null) _formMain.webViewMain_Reload(); }
         public void webViewMain_ShowDevTools() { if (_formMain != null) _formMain.webViewMain_ShowDevTools(); }
         public void webViewMain_Stop() { if (_formMain != null) _formMain.webViewMain_Stop(); }
+
+        #endregion
 
         public void f_link_getHtmlOnline(string url)
         {
@@ -368,7 +488,7 @@ namespace browser
         {
             if (_dicHtml.ContainsKey(url))
             {
-                socketSendMessage("@" + url);
+                socketPushMessage("@" + url);
                 return;
             }
 
@@ -388,7 +508,7 @@ namespace browser
                         {
                             string htm = bi.ToString();
                             _dicHtml.TryAdd(url, htm);
-                            socketSendMessage("@" + url);
+                            socketPushMessage("@" + url);
                         }
                     }
                     return size * nmemb;
@@ -411,7 +531,7 @@ namespace browser
         {
             if (_dicHtml.ContainsKey(url))
             {
-                socketSendMessage("@" + url);
+                socketPushMessage("@" + url);
                 return;
             }
 
@@ -430,7 +550,7 @@ namespace browser
                         {
                             string htm = bi.ToString();
                             _dicHtml.TryAdd(url, htm);
-                            socketSendMessage("@" + url);
+                            socketPushMessage("@" + url);
                         }
                     }
                     return size * nmemb;
@@ -456,55 +576,12 @@ namespace browser
             }
         }
 
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
+        #region [ MSG_QUEUE ]
 
-        /*/////////////////////////////////////////////////////////////*/
-        /*/////////////////////////////////////////////////////////////*/
-        static ConcurrentDictionary<string, byte[]> _dicMp3 = new ConcurrentDictionary<string, byte[]>() { };
-        bool playMp3FromUrl_waiting = false;
-        AutoResetEvent playMp3FromUrl_stop = new AutoResetEvent(false);
-        public void playMp3FromUrl333(string url, int timeout)
-        {
-            if (playMp3FromUrl_waiting) return;
+        static ConcurrentQueue<string> _msgQueue = new ConcurrentQueue<string> { };
+        public void socketPushMessage(string message) { if (!string.IsNullOrEmpty(message)) _msgQueue.Enqueue(message); }
 
-            //if (playMp3FromUrl_waiting) playMp3FromUrl_stop.Set();
-
-            Stream ms = null;
-            if (_dicMp3.ContainsKey(url))
-                ms = new MemoryStream(_dicMp3[url]);
-            else
-            {
-                ms = new MemoryStream();
-                using (Stream stream = WebRequest.Create(url).GetResponse().GetResponseStream())
-                {
-                    byte[] buffer = new byte[32768];
-                    int read;
-                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        ms.Write(buffer, 0, read);
-                    }
-                    _dicMp3.TryAdd(url, buffer);
-                }
-
-                ms.Position = 0;
-                using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
-                {
-                    using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-                    {
-                        waveOut.Init(blockAlignedStream);
-                        waveOut.PlaybackStopped += (sender, e) =>
-                        {
-                            waveOut.Stop();
-                        };
-                        waveOut.Play();
-                        playMp3FromUrl_waiting = true;
-                        playMp3FromUrl_stop.WaitOne(timeout);
-                        playMp3FromUrl_waiting = false;
-                    }
-                }
-            }
-        }
+        #endregion
 
         [STAThread]
         static void Main(string[] args)
@@ -515,8 +592,21 @@ namespace browser
             ServicePointManager.DefaultConnectionLimit = 1000;
             //----------------------------------------------------------------------
             _app = new App();
+            //----------------------------------------------------------------------
+            System.Timers.Timer aTimer = new System.Timers.Timer(300);
+            aTimer.Elapsed += (se, ev) => {
+                if (_msgQueue.Count > 0)
+                {
+                    string msg;
+                    if (_msgQueue.TryDequeue(out msg))
+                        if (!string.IsNullOrEmpty(msg)) _app.socketSendMessage(msg);
+                }
+            };
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+
             //_app.playMp3FromUrl("https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3", 1);
-            _app.playMp3FromUrl("http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3", 1);
+            //_app.playMp3FromUrl("http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3", 1);
             //Thread.Sleep(15000);
             //_app.playMp3FromUrl("http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3", 1);
 
@@ -543,49 +633,20 @@ namespace browser
                 socket.OnMessage = message =>
                 {
                     Console.WriteLine(message);
-                    if (message.Length > 0)
-                    {
-                        switch (message[0])
-                        {
-                            case '#':
-                                try
-                                {
-                                    message = message.Substring(1).Trim();
-                                    _speakWords = message.ToLower().Split(' ')
-                                        .Where(x => !EL._WORD_SKIP_WHEN_READING.Any(w => w == x))
-                                        .ToArray();
-                                    speechSynthesizer.Speak(_speakWords[_speakCounter]);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine(ex.Message);
-                                }
-                                break;
-                            case '!':
-                                // Cancel the SpeakAsync operation and wait one second.
-                                speechSynthesizer.SpeakAsyncCancelAll();
-                                break;
-                            default:
-                                //////long id = msgProcess.Push(socket.ConnectionInfo.Id.ToString(), message);
-                                ////////socket.Send(id.ToString());
-                                break;
-                        }
-                    }
                 };
                 socket.OnOpen = () =>
                 {
+                    _socketOpen = true;
                     _socketCurrent = socket;
-                    //Thread thread = new Thread(new ParameterizedThreadStart(DoMethod));
-                    //thread.Start(socket); 
-                    //msgProcess.Join(socket); 
-                    //Thread thread = new Thread(new ParameterizedThreadStart(DoMethod));
-                    //thread.Start(socket);                    
-                    //socket.Send("ID=" + socket.ConnectionInfo.Id.ToString());
+                    //socket.ConnectionInfo.Id.ToString();
                 };
                 socket.OnClose = () =>
                 {
-                    //Console.WriteLine("Close!");
-                    //allSockets.Remove(socket);
+                    _socketOpen = false;
+                };
+                socket.OnError = (err) =>
+                {
+                    _socketOpen = false;
                 };
             });
 
@@ -636,5 +697,6 @@ namespace browser
             _log.Append(text);
             _log.Append(Environment.NewLine);
         }
+
     }
 }

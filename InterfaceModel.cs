@@ -8,6 +8,8 @@ namespace browser
     {
         int socketPort { get; }
         Fleck2.Interfaces.IWebSocketConnection socketCurrent { get; }
+        void socketSendMessage(string message);
+        void socketPushMessage(string message);
 
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
@@ -19,7 +21,9 @@ namespace browser
 
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
-        void playMp3FromUrl(string url, int repeat);
+        void downloadMp3(string url, int timeOutDownloadMp3 = 30000);
+
+        void playMp3FromUrl(string url, int repeat, bool isRunOnline = false, int timeOutDownloadMp3 = 30000);
 
         void speechSentence(string text, int repeat);
         void speechWords(string text, int repeat);
@@ -51,6 +55,9 @@ namespace browser
 
     public class oApp
     {
+        public string[] storePaths { get; set; }
+        public string storePathCurrent { get; set; }
+
         public int socketPort { get; set; }
 
         public bool alwayOnTop { set; get; }
@@ -67,6 +74,9 @@ namespace browser
 
         public oApp()
         {
+            this.storePathCurrent = string.Empty;
+            this.storePaths = new string[] { @"G:\GoogleDrive" };
+
             this.Width = 600;
             this.Height = 480;
             this.alwayOnTop = false;

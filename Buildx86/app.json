@@ -1,12 +1,16 @@
 {
-  "socketPort": 51266,
-  "alwayOnTop": true,
+  "storePaths": [
+    "G:\\GoogleDrive"
+  ],
+  "storePathCurrent": "",
+  "socketPort": 49358,
+  "alwayOnTop": false,
   "hasWriteLog": true,
   "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",
-  "Width": 651,
-  "Height": 941,
-  "Top": 142,
-  "Left": 1198,
+  "Width": 600,
+  "Height": 480,
+  "Top": 600,
+  "Left": 0,
   "coreJs": {
     "Scheme": "https",
     "Host": "www.google-analytics.com",
