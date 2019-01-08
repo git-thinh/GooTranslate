@@ -250,6 +250,13 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
 
         static ConcurrentDictionary<string, string> _dicHtml = new ConcurrentDictionary<string, string>() { };
+
+        public string fetchResponse(string url)
+        {
+            if (_dicHtml.ContainsKey(url)) return _dicHtml[url];
+            return string.Empty;
+        }
+
         public void fetchHttp(string url)
         {
             if (_dicHtml.ContainsKey(url))

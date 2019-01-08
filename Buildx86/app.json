@@ -1,6 +1,6 @@
 {
-  "socketPort": 59272,
-  "alwayOnTop": false,
+  "socketPort": 59831,
+  "alwayOnTop": true,
   "hasWriteLog": true,
   "Url": "https://translate.google.com/#view=home&op=translate&sl=en&tl=vi",
   "Width": 651,

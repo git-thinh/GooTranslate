@@ -12,6 +12,8 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
+        string fetchResponse(string url);
+
         void fetchHttp(string url);
         void fetchHttps(string url);
 

@@ -37,6 +37,11 @@ namespace browser
         /*/////////////////////////////////////////////////////////////*/
         /*/////////////////////////////////////////////////////////////*/
 
+        public String fetchResponse(String url)
+        {
+            return _app.fetchResponse(url);
+        }
+
         public void fetchHttp(String url)
         {
             _app.fetchHttp(url);
