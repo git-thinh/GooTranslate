@@ -160,6 +160,10 @@ function f_english_Translate() {
         f_log('TRANSLATE ', otran);
         var text = otran.text.toLowerCase().trim();
 
+        ___CORE.translate_Execute(text);
+
+        //--------------------------------------------------------------------------------------------------------
+
         //___API.speechWord(text, 1);
         //___API.playMp3FromUrl('https://s3.amazonaws.com/audio.oxforddictionaries.com/en/mp3/hello_gb_1.mp3', 1);
         //___API.playMp3FromUrl('http://audio.oxforddictionaries.com/en/mp3/ranker_gb_1_8.mp3', 1);

@@ -1,4 +1,4 @@
-﻿using CefSharp;
+﻿using CefShap;
 using System;
 using System.Windows.Forms;
 using System.Text;
@@ -16,6 +16,7 @@ using System.Linq;
 using NAudio.Wave;
 using core2.MMF;
 using System.Collections.Generic;
+using CefSharp;
 
 namespace browser
 {
@@ -647,7 +648,9 @@ namespace browser
         [STAThread]
         static void Main(string[] args)
         {
-            if (!CEF.Initialize(new Settings())) return;
+            var settings = new Settings();
+            //settings.CefCommandLineArgs.Add("js-flags", "--harmony-proxies");
+            if (!CEF.Initialize(settings)) return;
             //----------------------------------------------------------------------
             ThreadPool.SetMaxThreads(25, 25);
             ServicePointManager.DefaultConnectionLimit = 1000;

@@ -307,6 +307,8 @@ namespace browser
             myMenu.Items.Add(new ToolStripSeparator());
             myMenu.Items.Add("Close Menu");
             myMenu.Items.Add("Exit Program");
+            myMenu.Items.Add(new ToolStripSeparator());
+            myMenu.Items.Add("Test");
             myMenu.ItemClicked += (se, ev) => f_menuItem_Click(ev.ClickedItem.Text);
 
             #endregion
@@ -409,6 +411,9 @@ namespace browser
                     this.WindowState = FormWindowState.Minimized;
                     break;
                 case "Close Menu":
+                    break;
+                case "Test":
+                    ui_webMain.ExecuteScript(" ___CORE.translate_Execute('common'); ");
                     break;
                 case "Exit Program":
                     this.Close();

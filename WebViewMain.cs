@@ -44,7 +44,7 @@ namespace browser
             }; 
             _webView.MenuHandler = new MenuHandler();
             _webView.RequestHandler = this;
-
+            
             //////////_webView.LifeSpanHandler
             //////////_webView.LoadHandler
             //////////_webView.JsDialogHandler = new WebViewDialogHandler(this);
@@ -56,6 +56,10 @@ namespace browser
             //browser.AddressChanged += OnBrowserAddressChanged;
 
             this.Controls.Add(_webView);
+        }
+
+        public void ExecuteScript(string script) {
+            _webView.ExecuteScript(script);
         }
 
         public void onReady(Form main)
